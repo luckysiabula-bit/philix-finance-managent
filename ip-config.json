@@ -1,0 +1,29 @@
+{
+  "networks": {
+    "localhost": {
+      "name": "Local Development",
+      "description": "Both frontend and backend on same machine",
+      "xampp_ip": "127.0.0.1",
+      "server_ip": "localhost"
+    },
+    "home_wifi": {
+      "name": "Home WiFi",
+      "description": "Update these IPs for your home network",
+      "xampp_ip": "192.168.1.100",
+      "server_ip": "192.168.1.150"
+    },
+    "office_wifi": {
+      "name": "Office WiFi", 
+      "description": "Update these IPs for your office network",
+      "xampp_ip": "10.1.143.100",
+      "server_ip": "10.1.143.199"
+    },
+    "mobile_hotspot": {
+      "name": "Mobile Hotspot",
+      "description": "Current mobile hotspot setup",
+      "xampp_ip": "192.168.137.100",
+      "server_ip": "192.168.137.154"
+    }
+  },
+  "current_network": "mobile_hotspot"
+}

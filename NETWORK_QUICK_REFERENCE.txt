@@ -1,0 +1,73 @@
+================================================================
+PHILIX FINANCE - NETWORK CONFIGURATION QUICK REFERENCE
+================================================================
+
+PROBLEM: Your local IP changes when switching WiFi networks, mobile hotspot, etc.
+SOLUTION: Use the network configuration scripts to quickly switch setups.
+
+STEP 1: EDIT YOUR IP ADDRESSES
+------------------------------
+Edit the file: ip-config.json
+Add your actual IP addresses for different networks:
+
+{
+  "networks": {
+    "home_wifi": {
+      "xampp_ip": "192.168.1.100",    ← CHANGE THIS
+      "server_ip": "192.168.1.150"    ← CHANGE THIS
+    },
+    "office_wifi": {
+      "xampp_ip": "10.1.143.100",     ← CHANGE THIS  
+      "server_ip": "10.1.143.199"     ← CHANGE THIS
+    }
+  }
+}
+
+STEP 2: FIND YOUR IP ADDRESS
+-----------------------------
+Windows: Open Command Prompt → type "ipconfig"
+Mac/Linux: Open Terminal → type "ifconfig" or "ip addr"
+Look for your WiFi adapter's IPv4 address.
+
+STEP 3: SWITCH NETWORKS
+-----------------------
+Windows:
+  switch-network.bat home_wifi
+  switch-network.bat office_wifi  
+  switch-network.bat mobile_hotspot
+  switch-network.bat localhost
+
+Mac/Linux:
+  ./switch-network.sh home_wifi
+  ./switch-network.sh office_wifi
+  ./switch-network.sh mobile_hotspot
+  ./switch-network.sh localhost
+
+STEP 4: RESTART SERVERS
+-----------------------
+After switching networks, restart both servers:
+1. Press Ctrl+C to stop backend and frontend
+2. Backend: cd backend && npm run dev
+3. Frontend: npm run dev
+
+QUICK COMMANDS
+--------------
+Show available networks:     switch-network.bat list
+Show current configuration:  switch-network.bat current
+Custom IP setup:            switch-network.bat custom
+
+COMMON SETUPS
+-------------
+📱 Mobile Hotspot:      Usually 192.168.137.xxx or 192.168.43.xxx
+🏠 Home WiFi:          Usually 192.168.1.xxx or 192.168.0.xxx  
+🏢 Office WiFi:        Usually 10.1.xxx.xxx or 172.16.xxx.xxx
+💻 Localhost Only:     Use "localhost" configuration
+
+TROUBLESHOOTING
+---------------
+❌ Can't connect to database → Check XAMPP is running, verify DB IP
+❌ Can't connect to API → Check backend server is running, verify server IP
+❌ CORS errors → Configuration script fixes this automatically
+❌ Scripts not working → Make sure Node.js is installed, run "npm install"
+
+================================================================
