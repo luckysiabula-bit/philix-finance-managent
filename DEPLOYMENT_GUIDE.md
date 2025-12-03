@@ -29,17 +29,28 @@ mysqldump -u root -p loan_system > C:\backup\loan_system_backup.sql
 mysqldump -u root loan_system > C:\backup\loan_system_backup.sql
 ```
 
-### Step 2: Install Automatic Status Update System
+### Step 2: Set Up Database Structure
 
 ```sql
--- Run this in your XAMPP phpMyAdmin or MySQL Workbench
--- File: auto_loan_status_update.sql
+-- STEP 2A: Create complete database structure
+-- File: schema.sql
+-- This creates all tables, seed data, and stored procedures
 
--- This creates triggers that automatically update loan status
--- when payments are recorded
+-- Run this FIRST in your XAMPP phpMyAdmin or MySQL Workbench
 ```
 
-### Step 3: Test Locally (Optional but Recommended)
+### Step 3: Install Automatic Status Update System
+
+```sql
+-- STEP 2B: Add automation triggers
+-- File: auto_loan_status_update.sql
+-- This creates triggers that automatically update loan status
+-- when payments are recorded
+
+-- Run this SECOND after schema.sql
+```
+
+### Step 4: Test Locally (Optional but Recommended)
 
 ```sql
 -- After installing the triggers, test with a sample payment:
@@ -105,12 +116,14 @@ SELECT id, outstanding_balance, status FROM loans WHERE id = 1;
 
 6. **Import Your Database**
    ```bash
-   # Railway CLI method
+   # Option A: Import existing backup
    railway login
    railway link [your-project-id]
    railway run mysql -h [host] -u root -p[password] railway < loan_system_backup.sql
    
-   # Or use MySQL Workbench with Railway's connection details
+   # Option B: Run fresh setup (RECOMMENDED)
+   # 1. Run schema.sql first
+   # 2. Run auto_loan_status_update.sql second
    ```
 
 7. **Deploy Frontend**
@@ -120,9 +133,11 @@ SELECT id, outstanding_balance, status FROM loans WHERE id = 1;
      VITE_API_URL=https://your-backend-url.railway.app/api
      ```
 
-8. **Run Database Setup**
+8. **Run Database Setup** (if using Option B)
    - Connect to Railway MySQL
-   - Run `auto_loan_status_update.sql`
+   - **Step 1:** Run `schema.sql` (creates all tables + seed data)
+   - **Step 2:** Run `auto_loan_status_update.sql` (adds triggers)
+   - **Step 3:** Run `test_loan_payment.sql` (verify it works)
    - Done! ✅
 
 ---
@@ -343,16 +358,30 @@ CALL recalculate_all_loan_statuses();
 
 ---
 
-## 🎉 Next Steps
+## 🎯 **CRITICAL: Complete SQL Deployment Order**
 
-1. ✅ Export XAMPP database
-2. ✅ Install automatic status triggers locally (test first)
-3. ✅ Push code to GitHub
-4. ✅ Deploy to Railway
-5. ✅ Import database to Railway MySQL
-6. ✅ Run `auto_loan_status_update.sql` on Railway
-7. ✅ Test payment → loan status update flow
-8. ✅ Celebrate! 🎊
+### **Local Setup (XAMPP Testing):**
+1. ✅ **Run `schema.sql`** - Creates database structure + seed data
+2. ✅ **Run `auto_loan_status_update.sql`** - Adds automation triggers  
+3. ✅ **Run `test_loan_payment.sql`** - Verify automation works
+4. ✅ **Optional: Run `fix_existing_loans.sql`** - Fix any existing data
+
+### **Cloud Deployment Options:**
+
+#### **Option A: Import Complete Database (Easiest)**
+1. ✅ Export XAMPP database (after running all SQL scripts locally)
+2. ✅ Import to Railway/Render MySQL
+3. ✅ Done!
+
+#### **Option B: Fresh Cloud Setup (Recommended)**  
+1. ✅ Push code to GitHub
+2. ✅ Deploy to Railway/Render
+3. ✅ **Run `schema.sql`** in cloud MySQL first
+4. ✅ **Run `auto_loan_status_update.sql`** in cloud MySQL second
+5. ✅ **Run `tmp_rovodev_deployment_script.sql`** to verify setup
+6. ✅ Test with `test_loan_payment.sql`
+
+## 🎉 Next Steps
 
 ---
 
