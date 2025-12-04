@@ -16,7 +16,7 @@ const useAuth = () => {
 
 // API Service
 // Frontend on Vercel, Backend on Railway
-const API_URL = 'https://philix-finance-system.vercel.app/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 console.log('🚀 FRONTEND-ONLY DEPLOYMENT - API_URL:', API_URL);
 console.log('🚀 Build timestamp:', new Date().toISOString());
 

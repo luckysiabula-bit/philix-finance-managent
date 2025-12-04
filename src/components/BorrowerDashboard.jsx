@@ -6,7 +6,7 @@ import { AlertCircle, CheckCircle, DollarSign, Calendar, TrendingUp, Users, File
 
 // API Service URL
 // Force production API URL for Vercel deployment
-const API_URL = 'https://philix-finance-system.vercel.app/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 console.log('🔍 BorrowerDashboard API_URL:', API_URL);
 
 // Weekly loan calculation with fixed rates
