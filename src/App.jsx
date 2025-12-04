@@ -15,9 +15,9 @@ const useAuth = () => {
 };
 
 // API Service
-const API_URL = (import.meta.env?.VITE_API_URL || import.meta.env?.VITEAPIURL || import.meta.env?.API_URL || 'https://philix-finance-system.vercel.app/api').replace(/\/+$/, '');
+// Force production API URL for Vercel deployment
+const API_URL = 'https://philix-finance-system.vercel.app/api';
 console.log('🔍 API_URL being used:', API_URL);
-console.log('🔍 Environment variables:', import.meta.env);
 
 // Weekly loan calculation with fixed rates
 const calculateWeeklyLoan = (principal, weeks) => {
