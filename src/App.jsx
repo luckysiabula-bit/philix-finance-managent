@@ -15,9 +15,9 @@ const useAuth = () => {
 };
 
 // API Service
-// Force production API URL for Vercel deployment - v2
+// Frontend on Vercel, Backend on Railway
 const API_URL = 'https://philix-finance-system.vercel.app/api';
-console.log('🚀 PRODUCTION API_URL v2:', API_URL);
+console.log('🚀 FRONTEND-ONLY DEPLOYMENT - API_URL:', API_URL);
 console.log('🚀 Build timestamp:', new Date().toISOString());
 
 // Weekly loan calculation with fixed rates
