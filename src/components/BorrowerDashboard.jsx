@@ -6,6 +6,7 @@ import { AlertCircle, CheckCircle, DollarSign, Calendar, TrendingUp, Users, File
 
 // API Service URL
 const API_URL = (import.meta.env?.VITE_API_URL || 'http://localhost:3000/api').replace(/\/+$/, '');
+console.log('🔍 BorrowerDashboard API_URL:', API_URL);
 
 // Weekly loan calculation with fixed rates
 const calculateWeeklyLoan = (principal, weeks) => {

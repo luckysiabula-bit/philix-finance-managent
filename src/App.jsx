@@ -16,6 +16,8 @@ const useAuth = () => {
 
 // API Service
 const API_URL = (import.meta.env?.VITE_API_URL || 'http://localhost:3000/api').replace(/\/+$/, '');
+console.log('🔍 API_URL being used:', API_URL);
+console.log('🔍 Environment variables:', import.meta.env);
 
 // Weekly loan calculation with fixed rates
 const calculateWeeklyLoan = (principal, weeks) => {

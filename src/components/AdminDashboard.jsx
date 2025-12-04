@@ -7,6 +7,7 @@ import LoanCalculator from './LoanCalculator';
 
 // API Service URL
 const API_URL = (import.meta.env?.VITE_API_URL || 'http://localhost:3000/api').replace(/\/+$/, '');
+console.log('🔍 AdminDashboard API_URL:', API_URL);
 
 // Collateral assessment function
 const assessCollateralValue = ({
