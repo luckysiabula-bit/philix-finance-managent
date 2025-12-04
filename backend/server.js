@@ -32,7 +32,10 @@ const allowedOrigins = [
   'http://127.0.0.1:5174',
   `http://${process.env.SERVER_IP}:5173`,
   `http://${process.env.SERVER_IP}:5174`,
-  `http://${process.env.SERVER_IP}:3000`
+  `http://${process.env.SERVER_IP}:3000`,
+  // Production Vercel domains
+  'https://philix-finance-system.vercel.app',
+  'https://philix-finance-system-aa0lwiyyh-5three.vercel.app'
 ];
 // CORS
 app.use(cors({
