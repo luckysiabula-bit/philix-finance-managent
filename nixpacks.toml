@@ -9,3 +9,6 @@ cmds = ["npm run build"]
 
 [start]
 cmd = "node backend/server.js"
+
+# Environment variables are only needed at runtime, not during build
+[variables]
