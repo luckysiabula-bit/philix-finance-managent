@@ -256,7 +256,7 @@ const AdminDashboard = ({ useAuth }) => {
               <img 
                 src="/company-logo.png" 
                 alt="Company Logo" 
-                className="h-8 md:h-10 w-auto object-contain"
+                className="h-10 w-auto object-contain"
               />
               <div>
                 <h1 className="text-xl md:text-3xl font-bold text-gray-900">PHILIX Finance</h1>
