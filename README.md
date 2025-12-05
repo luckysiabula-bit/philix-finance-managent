@@ -56,3 +56,4 @@ npm run preview
 
 ## License
 MIT
+# Restored to normal desktop version - Sat Dec  6 12:30:47 AM CAT 2025
