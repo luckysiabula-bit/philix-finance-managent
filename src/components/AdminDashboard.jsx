@@ -250,7 +250,7 @@ const AdminDashboard = ({ useAuth }) => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Header */}
       <header className="bg-white shadow-lg border-b-2 border-indigo-200 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 py-2 md:py-4">
+        <div className="max-w-md mx-auto px-4 py-4">
           <div className="flex justify-between items-center gap-2">
             <div className="flex items-center gap-1 md:gap-4 flex-shrink min-w-0">
               <img 
@@ -288,7 +288,7 @@ const AdminDashboard = ({ useAuth }) => {
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-4">
+      <div className="max-w-md mx-auto px-4 py-4">
         {/* Welcome Section */}
         <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 mb-4">
           <h2 className="text-lg md:text-xl font-bold text-gray-900 mb-2">Admin Overview</h2>

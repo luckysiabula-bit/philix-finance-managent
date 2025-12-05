@@ -230,7 +230,7 @@ const BorrowerDashboard = ({ useAuth }) => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Header */}
       <header className="bg-white shadow-lg border-b-2 border-indigo-200 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3 md:py-6">
+        <div className="max-w-md mx-auto px-4 py-4">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2 md:gap-4 flex-1 min-w-0">
               <img 
@@ -388,7 +388,7 @@ const BorrowerDashboard = ({ useAuth }) => {
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-md mx-auto px-4 py-4">
         {/* Welcome Section */}
         <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-8 mb-8">
           <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">Welcome to Your Dashboard</h2>
