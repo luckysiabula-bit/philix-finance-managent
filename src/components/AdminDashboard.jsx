@@ -250,13 +250,13 @@ const AdminDashboard = ({ useAuth }) => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Header */}
       <header className="bg-white shadow-lg border-b-2 border-indigo-200 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 py-3 md:py-6">
+        <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 py-2 md:py-4">
           <div className="flex justify-between items-center gap-2">
             <div className="flex items-center gap-1 md:gap-4 flex-shrink min-w-0">
               <img 
                 src="/company-logo.png" 
                 alt="Company Logo" 
-                className="h-4 w-4 object-contain flex-shrink-0"
+                className="h-8 md:h-10 w-auto object-contain flex-shrink-0"
               />
               <div className="min-w-0 hidden md:block">
                 <h1 className="text-lg md:text-3xl font-bold text-gray-900 truncate">PHILIX Finance</h1>
@@ -287,15 +287,15 @@ const AdminDashboard = ({ useAuth }) => {
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-4">
         {/* Welcome Section */}
-        <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-8 mb-8">
-          <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">Admin Overview</h2>
+        <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 mb-4">
+          <h2 className="text-lg md:text-xl font-bold text-gray-900 mb-2">Admin Overview</h2>
           <p className="text-sm md:text-base text-gray-700 mb-4 md:mb-6 font-medium">Monitor and manage all loan applications, collateral, and portfolio performance</p>
           
           {/* Summary Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-            <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl border-2 border-green-200 p-4 md:p-6 hover:shadow-lg transition">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg border-2 border-green-200 p-3 hover:shadow-md transition">
               <div className="flex items-center justify-between mb-2 md:mb-3">
                 <h3 className="text-green-900 font-bold text-xs md:text-sm uppercase tracking-wide">Active Loans</h3>
                 <div className="bg-green-600 w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center flex-shrink-0">
