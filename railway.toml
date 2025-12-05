@@ -19,6 +19,6 @@ DB_USER = "root"
 DB_PASSWORD = "LsMiPgowSuGMjcHTvklTbKaHlPvsRfOX"
 DB_NAME = "railway"
 
-# Security Variables (CHANGE THESE!)
-JWT_SECRET = "your_super_secure_jwt_secret_replace_this_immediately"
-ADMIN_CREATION_SECRET = "your_admin_secret_replace_this_immediately"
+# Security Variables
+JWT_SECRET = "lucky_jwt_secret_2024"
+ADMIN_CREATION_SECRET = "lucky_admin_secret"
