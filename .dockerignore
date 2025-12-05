@@ -1,9 +1,0 @@
-node_modules
-backend
-.git
-.gitignore
-*.md
-.env
-.env.local
-.env.production
-dist
