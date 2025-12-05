@@ -22,5 +22,5 @@ RUN npm install -g serve
 # Expose port
 EXPOSE $PORT
 
-# Serve the built app
-CMD serve -s dist -l $PORT
+# Serve the built app with SPA routing support  
+CMD ["sh", "-c", "serve -s dist -l ${PORT:-5000}"]
