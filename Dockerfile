@@ -13,8 +13,11 @@ RUN npm ci --only=production
 # Copy backend source code
 COPY backend/ ./
 
-# Expose port
-EXPOSE $PORT
+# Set production environment
+ENV NODE_ENV=production
+
+# Expose port (Railway assigns PORT dynamically)
+EXPOSE 3000
 
 # Start the application
 CMD ["npm", "start"]
