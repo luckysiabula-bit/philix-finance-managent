@@ -32,14 +32,27 @@ const allowedOrigins = [
   'http://127.0.0.1:5174',
   `http://${process.env.SERVER_IP}:5173`,
   `http://${process.env.SERVER_IP}:5174`,
-  `http://${process.env.SERVER_IP}:3000`
-  // Add your production frontend URL in FRONTEND_ORIGIN environment variable
+  `http://${process.env.SERVER_IP}:3000`,
+  // Railway production URLs (add your actual frontend URL here)
+  'https://philix-finance-frontend.up.railway.app',
+  // Allow any Railway subdomain for development
+  /^https:\/\/.*\.up\.railway\.app$/
 ];
 // CORS
 app.use(cors({
   origin: function (origin, cb) {
-    // allow no-origin requests (like curl/Postman) and allowed origins
-    if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
+    // allow no-origin requests (like curl/Postman)
+    if (!origin) return cb(null, true);
+    
+    // Check string origins
+    if (allowedOrigins.some(allowed => {
+      if (typeof allowed === 'string') return allowed === origin;
+      if (allowed instanceof RegExp) return allowed.test(origin);
+      return false;
+    })) {
+      return cb(null, true);
+    }
+    
     return cb(new Error('Not allowed by CORS: ' + origin));
   },
   credentials: true,
