@@ -252,33 +252,33 @@ const AdminDashboard = ({ useAuth }) => {
       <header className="bg-white shadow-lg border-b-2 border-indigo-200 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 py-3 md:py-6">
           <div className="flex justify-between items-center gap-2">
-            <div className="flex items-center gap-2 md:gap-4 flex-shrink min-w-0">
+            <div className="flex items-center gap-1 md:gap-4 flex-shrink min-w-0">
               <img 
                 src="/company-logo.png" 
                 alt="Company Logo" 
-                className="h-8 md:h-10 w-auto object-contain flex-shrink-0"
+                className="h-6 md:h-10 w-auto object-contain flex-shrink-0"
               />
-              <div className="min-w-0 hidden sm:block">
+              <div className="min-w-0 hidden md:block">
                 <h1 className="text-lg md:text-3xl font-bold text-gray-900 truncate">PHILIX Finance</h1>
-                <p className="text-xs md:text-sm text-gray-700 font-medium hidden md:block">Admin Dashboard</p>
+                <p className="text-xs md:text-sm text-gray-700 font-medium">Admin Dashboard</p>
               </div>
             </div>
-            <div className="flex items-center gap-1.5 md:gap-3 flex-shrink-0">
+            <div className="flex items-center gap-1 md:gap-3 flex-shrink-0">
               <button
                 onClick={() => setShowLoanCalculator(true)}
-                className="bg-indigo-600 text-black px-2 py-1.5 md:px-4 md:py-2 rounded-lg hover:bg-indigo-700 transition font-black shadow-lg hover:shadow-xl border-2 border-indigo-400 text-xs md:text-lg"
+                className="bg-indigo-600 text-black px-1.5 py-1 md:px-4 md:py-2 rounded md:rounded-lg hover:bg-indigo-700 transition font-black shadow-md hover:shadow-xl border border-indigo-400 md:border-2 text-xs md:text-lg"
               >
                 🧮 <span className="hidden md:inline">Calculator</span>
               </button>
               <button
                 onClick={() => setShowCreateAdmin(true)}
-                className="bg-gradient-to-r from-purple-600 to-purple-700 text-black px-2 py-1.5 md:px-4 md:py-2 rounded-lg hover:from-purple-700 hover:to-purple-800 transition font-black shadow-lg hover:shadow-xl border-2 border-purple-400 text-xs md:text-lg"
+                className="bg-gradient-to-r from-purple-600 to-purple-700 text-black px-1.5 py-1 md:px-4 md:py-2 rounded md:rounded-lg hover:from-purple-700 hover:to-purple-800 transition font-black shadow-md hover:shadow-xl border border-purple-400 md:border-2 text-xs md:text-lg"
               >
                 👤 <span className="hidden md:inline">Create Admin</span>
               </button>
               <button
                 onClick={logout}
-                className="bg-gradient-to-r from-red-600 to-red-700 text-black px-2 py-1.5 md:px-5 md:py-2.5 rounded-lg hover:from-red-700 hover:to-red-800 transition font-black shadow-lg hover:shadow-xl border-2 border-red-400 text-xs md:text-lg"
+                className="bg-gradient-to-r from-red-600 to-red-700 text-black px-1.5 py-1 md:px-5 md:py-2.5 rounded md:rounded-lg hover:from-red-700 hover:to-red-800 transition font-black shadow-md hover:shadow-xl border border-red-400 md:border-2 text-xs md:text-lg"
               >
                 🚪 <span className="hidden md:inline">Logout</span>
               </button>
