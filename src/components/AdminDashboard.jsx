@@ -290,8 +290,8 @@ const AdminDashboard = ({ useAuth }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Welcome Section */}
         <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-8 mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Admin Overview</h2>
-          <p className="text-gray-700 mb-6 font-medium">Monitor and manage all loan applications, collateral, and portfolio performance</p>
+          <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">Admin Overview</h2>
+          <p className="text-sm md:text-base text-gray-700 mb-4 md:mb-6 font-medium">Monitor and manage all loan applications, collateral, and portfolio performance</p>
           
           {/* Summary Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
@@ -346,7 +346,7 @@ const AdminDashboard = ({ useAuth }) => {
               <div className="bg-orange-600 w-12 h-12 rounded-full flex items-center justify-center">
                 <FileText className="text-white" size={24} />
               </div>
-              <h2 className="text-2xl font-bold text-gray-900">Loan Applications</h2>
+              <h2 className="text-xl md:text-2xl font-bold text-gray-900">Loan Applications</h2>
             </div>
             
             {/* Filter Controls */}
@@ -673,7 +673,7 @@ const AdminDashboard = ({ useAuth }) => {
               <div className="bg-blue-600 w-12 h-12 rounded-full flex items-center justify-center">
                 <CreditCard className="text-white" size={24} />
               </div>
-              <h2 className="text-2xl font-bold text-gray-900">All Loans</h2>
+              <h2 className="text-xl md:text-2xl font-bold text-gray-900">All Loans</h2>
             </div>
             
             {/* Status Filter */}
@@ -853,7 +853,7 @@ const AdminDashboard = ({ useAuth }) => {
               <div className="bg-purple-600 w-12 h-12 rounded-full flex items-center justify-center">
                 <span className="text-white text-2xl">📦</span>
               </div>
-              <h2 className="text-2xl font-bold text-gray-900">Collateral Management</h2>
+              <h2 className="text-xl md:text-2xl font-bold text-gray-900">Collateral Management</h2>
             </div>
             <button
               className="bg-gradient-to-r from-blue-600 to-blue-700 text-black px-4 py-2 rounded-lg hover:from-blue-700 hover:to-blue-800 transition font-black shadow-lg hover:shadow-xl border-2 border-blue-400 text-lg"
@@ -953,9 +953,9 @@ const AdminDashboard = ({ useAuth }) => {
                 <div className="bg-purple-600 w-12 h-12 rounded-full flex items-center justify-center">
                   <span className="text-white text-2xl">📦</span>
                 </div>
-                <h2 className="text-3xl font-bold text-gray-900">Assess Collateral</h2>
+                <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Assess Collateral</h2>
               </div>
-              <button className="text-gray-500 hover:text-gray-700 text-3xl font-bold transition-colors" onClick={()=>setSelectedCollateral(null)}>×</button>
+              <button className="text-gray-500 hover:text-gray-700 text-2xl md:text-3xl font-bold transition-colors" onClick={()=>setSelectedCollateral(null)}>×</button>
             </div>
 
             {/* Collateral Details */}
@@ -1030,10 +1030,10 @@ const AdminDashboard = ({ useAuth }) => {
                 <div className="bg-purple-600 w-12 h-12 rounded-full flex items-center justify-center">
                   <span className="text-white text-2xl">👤</span>
                 </div>
-                <h2 className="text-2xl font-bold text-gray-900">Create Admin User</h2>
+                <h2 className="text-xl md:text-2xl font-bold text-gray-900">Create Admin User</h2>
               </div>
               <button 
-                className="text-gray-500 hover:text-gray-700 text-3xl font-bold transition-colors" 
+                className="text-gray-500 hover:text-gray-700 text-2xl md:text-3xl font-bold transition-colors" 
                 onClick={() => {
                   setShowCreateAdmin(false);
                   setAdminForm({email: '', password: '', full_name: '', phone_number: ''});
