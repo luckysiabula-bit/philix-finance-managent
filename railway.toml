@@ -11,3 +11,14 @@ restartPolicyMaxRetries = 10
 [variables]
 NODE_ENV = "production"
 NIXPACKS_BUILD_CMD = "cd backend && npm ci --only=production"
+
+# Database Variables (Railway MySQL)
+DB_HOST = "mysql-zylh.railway.internal"
+DB_PORT = "3306"
+DB_USER = "root"
+DB_PASSWORD = "LsMiPgowSuGMjcHTvklTbKaHlPvsRfOX"
+DB_NAME = "railway"
+
+# Security Variables (CHANGE THESE!)
+JWT_SECRET = "your_super_secure_jwt_secret_replace_this_immediately"
+ADMIN_CREATION_SECRET = "your_admin_secret_replace_this_immediately"
