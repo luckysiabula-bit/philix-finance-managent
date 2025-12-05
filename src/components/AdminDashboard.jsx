@@ -250,37 +250,37 @@ const AdminDashboard = ({ useAuth }) => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Header */}
       <header className="bg-white shadow-lg border-b-2 border-indigo-200 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div className="flex items-center gap-3 md:gap-4">
               <img 
                 src="/company-logo.png" 
                 alt="Company Logo" 
-                className="h-10 w-auto object-contain"
+                className="h-8 md:h-10 w-auto object-contain"
               />
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">PHILIX Finance</h1>
-                <p className="text-sm text-gray-700 font-medium">Admin Dashboard</p>
+                <h1 className="text-xl md:text-3xl font-bold text-gray-900">PHILIX Finance</h1>
+                <p className="text-xs md:text-sm text-gray-700 font-medium">Admin Dashboard</p>
               </div>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 md:gap-3 flex-wrap w-full sm:w-auto">
               <button
                 onClick={() => setShowLoanCalculator(true)}
-                className="bg-indigo-600 text-black px-4 py-2 rounded-lg hover:bg-indigo-700 transition font-black shadow-lg hover:shadow-xl border-2 border-indigo-400 text-lg"
+                className="bg-indigo-600 text-black px-3 py-1.5 md:px-4 md:py-2 rounded-lg hover:bg-indigo-700 transition font-black shadow-lg hover:shadow-xl border-2 border-indigo-400 text-sm md:text-lg"
               >
-                🧮 Calculator
+                🧮 <span className="hidden sm:inline">Calculator</span>
               </button>
               <button
                 onClick={() => setShowCreateAdmin(true)}
-                className="bg-gradient-to-r from-purple-600 to-purple-700 text-black px-4 py-2 rounded-lg hover:from-purple-700 hover:to-purple-800 transition font-black shadow-lg hover:shadow-xl border-2 border-purple-400 text-lg"
+                className="bg-gradient-to-r from-purple-600 to-purple-700 text-black px-3 py-1.5 md:px-4 md:py-2 rounded-lg hover:from-purple-700 hover:to-purple-800 transition font-black shadow-lg hover:shadow-xl border-2 border-purple-400 text-sm md:text-lg"
               >
-                👤 Create Admin
+                👤 <span className="hidden sm:inline">Create Admin</span>
               </button>
               <button
                 onClick={logout}
-                className="bg-gradient-to-r from-red-600 to-red-700 text-black px-5 py-2.5 rounded-lg hover:from-red-700 hover:to-red-800 transition font-black shadow-lg hover:shadow-xl border-2 border-red-400 text-lg"
+                className="bg-gradient-to-r from-red-600 to-red-700 text-black px-3 py-1.5 md:px-5 md:py-2.5 rounded-lg hover:from-red-700 hover:to-red-800 transition font-black shadow-lg hover:shadow-xl border-2 border-red-400 text-sm md:text-lg"
               >
-                🚪 Logout
+                🚪 <span className="hidden sm:inline">Logout</span>
               </button>
             </div>
           </div>
@@ -294,47 +294,47 @@ const AdminDashboard = ({ useAuth }) => {
           <p className="text-gray-700 mb-6 font-medium">Monitor and manage all loan applications, collateral, and portfolio performance</p>
           
           {/* Summary Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl border-2 border-green-200 p-6 hover:shadow-lg transition">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-green-900 font-bold text-sm uppercase tracking-wide">Active Loans</h3>
-                <div className="bg-green-600 w-10 h-10 rounded-full flex items-center justify-center">
-                  <FileText className="text-white" size={20} />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+            <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl border-2 border-green-200 p-4 md:p-6 hover:shadow-lg transition">
+              <div className="flex items-center justify-between mb-2 md:mb-3">
+                <h3 className="text-green-900 font-bold text-xs md:text-sm uppercase tracking-wide">Active Loans</h3>
+                <div className="bg-green-600 w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center flex-shrink-0">
+                  <FileText className="text-white" size={16} />
                 </div>
               </div>
-              <p className="text-4xl font-bold text-green-900">{dashboard?.activeLoans || 0}</p>
+              <p className="text-3xl md:text-4xl font-bold text-green-900">{dashboard?.activeLoans || 0}</p>
             </div>
 
-            <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-xl border-2 border-indigo-200 p-6 hover:shadow-lg transition">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-indigo-900 font-bold text-sm uppercase tracking-wide">Total Outstanding</h3>
-                <div className="bg-indigo-600 w-10 h-10 rounded-full flex items-center justify-center">
-                  <DollarSign className="text-white" size={20} />
+            <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-xl border-2 border-indigo-200 p-4 md:p-6 hover:shadow-lg transition">
+              <div className="flex items-center justify-between mb-2 md:mb-3">
+                <h3 className="text-indigo-900 font-bold text-xs md:text-sm uppercase tracking-wide break-words">Total Outstanding</h3>
+                <div className="bg-indigo-600 w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center flex-shrink-0">
+                  <DollarSign className="text-white" size={16} />
                 </div>
               </div>
-              <p className="text-4xl font-bold text-indigo-900">
+              <p className="text-2xl md:text-4xl font-bold text-indigo-900 break-words">
                 ZMK {(dashboard?.totalOutstanding || 0).toLocaleString()}
               </p>
             </div>
 
-            <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl border-2 border-orange-200 p-6 hover:shadow-lg transition">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-orange-900 font-bold text-sm uppercase tracking-wide">Pending Applications</h3>
-                <div className="bg-orange-600 w-10 h-10 rounded-full flex items-center justify-center">
-                  <Calendar className="text-white" size={20} />
+            <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl border-2 border-orange-200 p-4 md:p-6 hover:shadow-lg transition">
+              <div className="flex items-center justify-between mb-2 md:mb-3">
+                <h3 className="text-orange-900 font-bold text-xs md:text-sm uppercase tracking-wide break-words">Pending Apps</h3>
+                <div className="bg-orange-600 w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center flex-shrink-0">
+                  <Calendar className="text-white" size={16} />
                 </div>
               </div>
-              <p className="text-4xl font-bold text-orange-900">{dashboard?.pendingApplications || 0}</p>
+              <p className="text-3xl md:text-4xl font-bold text-orange-900">{dashboard?.pendingApplications || 0}</p>
             </div>
 
-            <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl border-2 border-purple-200 p-6 hover:shadow-lg transition">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-purple-900 font-bold text-sm uppercase tracking-wide">Total Borrowers</h3>
-                <div className="bg-purple-600 w-10 h-10 rounded-full flex items-center justify-center">
-                  <Users className="text-white" size={20} />
+            <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl border-2 border-purple-200 p-4 md:p-6 hover:shadow-lg transition">
+              <div className="flex items-center justify-between mb-2 md:mb-3">
+                <h3 className="text-purple-900 font-bold text-xs md:text-sm uppercase tracking-wide break-words">Total Borrowers</h3>
+                <div className="bg-purple-600 w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center flex-shrink-0">
+                  <Users className="text-white" size={16} />
                 </div>
               </div>
-              <p className="text-4xl font-bold text-purple-900">{dashboard?.totalBorrowers || 0}</p>
+              <p className="text-3xl md:text-4xl font-bold text-purple-900">{dashboard?.totalBorrowers || 0}</p>
             </div>
           </div>
         </div>
