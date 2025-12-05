@@ -226,7 +226,7 @@ const Login = ({ onSwitchToRegister }) => {
             <img 
               src="/company-logo.png" 
               alt="Company Logo" 
-              className="h-8 md:h-12 w-auto object-contain"
+              className="h-8 w-8 md:h-12 md:w-auto object-contain"
             />
           </div>
           <h1 className="text-3xl font-bold text-gray-800">PHILIX Finance</h1>
@@ -346,7 +346,7 @@ const Register = ({ onSwitchToLogin }) => {
             <img 
               src="/company-logo.png" 
               alt="Company Logo" 
-              className="h-8 md:h-12 w-auto object-contain"
+              className="h-8 w-8 md:h-12 md:w-auto object-contain"
             />
           </div>
           <h1 className="text-3xl font-bold text-gray-800">Create Account</h1>
