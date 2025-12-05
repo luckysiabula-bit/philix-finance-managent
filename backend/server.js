@@ -33,6 +33,11 @@ const allowedOrigins = [
   `http://${process.env.SERVER_IP}:5173`,
   `http://${process.env.SERVER_IP}:5174`,
   `http://${process.env.SERVER_IP}:3000`,
+  // Vercel production URLs
+  'https://philix-finance-managent.vercel.app',
+  'https://philix-finance-managent-se6yjll10-5three.vercel.app',
+  // Allow any Vercel preview deployments
+  /^https:\/\/philix-finance-managent-.*\.vercel\.app$/,
   // Railway production URLs (add your actual frontend URL here)
   'https://philix-finance-frontend.up.railway.app',
   // Allow any Railway subdomain for development
