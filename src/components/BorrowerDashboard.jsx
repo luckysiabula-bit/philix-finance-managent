@@ -236,7 +236,7 @@ const BorrowerDashboard = ({ useAuth }) => {
               <img 
                 src="/company-logo.png" 
                 alt="Company Logo" 
-                className="h-6 md:h-8 w-auto object-contain flex-shrink-0"
+                className="h-4 w-4 object-contain flex-shrink-0"
               />
               <div className="min-w-0">
                 <h1 className="text-lg md:text-3xl font-bold text-gray-900 truncate">PHILIX Finance</h1>
