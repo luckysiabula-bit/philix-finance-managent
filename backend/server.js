@@ -189,11 +189,11 @@ app.post('/api/auth/create-admin', async (req, res) => {
     // Hash password
     const passwordHash = await bcrypt.hash(password, 10);
 
-    // Create admin user
+    // Create admin user (without phone_number - it doesn't exist in users table)
     const [userResult] = await pool.execute(
-      `INSERT INTO users (email, password_hash, role, phone_number, kyc_status, is_active, created_at, updated_at)
-       VALUES (?, ?, 'admin', ?, 'verified', TRUE, NOW(), NOW())`,
-      [email, passwordHash, phone_number]
+      `INSERT INTO users (email, password_hash, role, created_at, updated_at)
+       VALUES (?, ?, 'admin', NOW(), NOW())`,
+      [email, passwordHash]
     );
 
     const userId = userResult.insertId;
@@ -236,11 +236,11 @@ app.post('/api/auth/register', async (req, res) => {
     // Hash password
     const passwordHash = await bcrypt.hash(password, 10);
 
-    // Create user
+    // Create user (without phone_number - it doesn't exist in users table)
     const [userResult] = await pool.execute(
-      `INSERT INTO users (email, password_hash, role, phone_number, created_at, updated_at)
-       VALUES (?, ?, 'borrower', ?, NOW(), NOW())`,
-      [email, passwordHash, phone_number]
+      `INSERT INTO users (email, password_hash, role, created_at, updated_at)
+       VALUES (?, ?, 'borrower', NOW(), NOW())`,
+      [email, passwordHash]
     );
 
     const userId = userResult.insertId;
