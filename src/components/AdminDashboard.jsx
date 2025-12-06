@@ -902,7 +902,9 @@ const AdminDashboard = ({ useAuth }) => {
             const unassessedCollateral = adminCollateral?.filter(item => !item.assessed_value) || [];
             
             return unassessedCollateral.length ? (
-              <div className="overflow-x-auto">
+              <>
+              {/* Desktop Table View */}
+              <div className="hidden md:block overflow-x-auto">
                 <table className="w-full">
                   <thead>
                     <tr className="border-b-2 border-gray-200 bg-gradient-to-r from-indigo-50 to-purple-50">
@@ -956,6 +958,89 @@ const AdminDashboard = ({ useAuth }) => {
                   </tbody>
                 </table>
               </div>
+
+              {/* Mobile Card View */}
+              <div className="md:hidden space-y-4">
+                {unassessedCollateral.map(item => (
+                  <div key={item.id} className="bg-white rounded-xl border-2 border-purple-200 p-4">
+                    {/* Header - Borrower Name */}
+                    <div className="flex items-start justify-between mb-3 pb-3 border-b border-gray-200">
+                      <div className="flex-1">
+                        <h3 className="font-bold text-gray-900 text-lg">{item.full_name || item.email || `Borrower ${item.borrower_id}`}</h3>
+                        <p className="text-xs text-gray-600 font-medium">ID: {item.id}</p>
+                      </div>
+                      <span className="bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap ml-2 border border-amber-300">
+                        ⏳ Pending
+                      </span>
+                    </div>
+
+                    {/* Collateral Type */}
+                    <div className="mb-3">
+                      <p className="text-xs text-gray-600 font-medium mb-1">Type</p>
+                      <p className="font-bold text-gray-900">{item.type}</p>
+                    </div>
+
+                    {/* Market Value */}
+                    <div className="mb-3">
+                      <p className="text-xs text-gray-600 font-medium mb-1">Market Value</p>
+                      <p className="font-bold text-gray-900 text-lg">ZMK {Number(item.market_value).toLocaleString()}</p>
+                    </div>
+
+                    {/* Serial Number */}
+                    {item.serial_number && (
+                      <div className="mb-3">
+                        <p className="text-xs text-gray-600 font-medium mb-1">Serial/ID Number</p>
+                        <p className="text-sm text-gray-700">{item.serial_number}</p>
+                      </div>
+                    )}
+
+                    {/* Description */}
+                    {item.description && (
+                      <div className="mb-3">
+                        <p className="text-xs text-gray-600 font-medium mb-1">Description</p>
+                        <p className="text-sm text-gray-700">{item.description}</p>
+                      </div>
+                    )}
+
+                    {/* Photos */}
+                    {Array.isArray(item.images) && item.images.length > 0 ? (
+                      <div className="mb-3">
+                        <p className="text-xs text-gray-600 font-medium mb-2">Photos ({item.images.length})</p>
+                        <div className="grid grid-cols-3 gap-2">
+                          {item.images.slice(0, 3).map((img, idx) => (
+                            <div key={idx} className="relative cursor-pointer" onClick={() => {
+                              setLightboxImages(item.images);
+                              setLightboxIndex(idx);
+                              setLightboxOpen(true);
+                            }}>
+                              <img src={img} alt={`Photo ${idx+1}`} className="w-full h-20 object-cover rounded-lg border-2 border-indigo-200" />
+                              {item.images.length > 3 && idx === 2 && (
+                                <div className="absolute inset-0 bg-black bg-opacity-50 rounded-lg flex items-center justify-center">
+                                  <span className="text-white font-bold text-sm">+{item.images.length - 3}</span>
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="mb-3">
+                        <p className="text-xs text-gray-600 font-medium mb-1">Photos</p>
+                        <p className="text-sm text-gray-500 italic">No photos uploaded</p>
+                      </div>
+                    )}
+
+                    {/* Action Button */}
+                    <button 
+                      className="w-full bg-gradient-to-r from-green-600 to-green-700 text-white px-4 py-3 rounded-lg hover:from-green-700 hover:to-green-800 transition font-bold shadow-md text-base mt-3" 
+                      onClick={()=>setSelectedCollateral(item)}
+                    >
+                      📝 Assess Collateral
+                    </button>
+                  </div>
+                ))}
+              </div>
+              </>
             ) : adminCollateral?.length ? (
               <div className="text-center py-12 bg-green-50 rounded-xl border-2 border-green-200">
                 <div className="text-6xl mb-4">✅</div>
