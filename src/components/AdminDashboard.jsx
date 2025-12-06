@@ -250,7 +250,7 @@ const AdminDashboard = ({ useAuth }) => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Header */}
       <header className="bg-white shadow-lg border-b-2 border-indigo-200 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 py-2 md:py-4">
+        <div className="max-w-full md:max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 py-2 md:py-4">
           <div className="flex justify-between items-center gap-2">
             <div className="flex items-center gap-1 md:gap-4 flex-shrink min-w-0">
               <img 
@@ -288,7 +288,7 @@ const AdminDashboard = ({ useAuth }) => {
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-4">
+      <div className="max-w-full md:max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-4">
         {/* Welcome Section */}
         <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 mb-4">
           <h2 className="text-lg md:text-xl font-bold text-gray-900 mb-2">Admin Overview</h2>
@@ -341,7 +341,7 @@ const AdminDashboard = ({ useAuth }) => {
         </div>
 
         {/* Applications Table */}
-        <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-8 mb-8">
+        <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-4 md:p-8 mb-8">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
               <div className="bg-orange-600 w-12 h-12 rounded-full flex items-center justify-center">
@@ -848,7 +848,7 @@ const AdminDashboard = ({ useAuth }) => {
         </div>
 
         {/* Collateral Management */}
-        <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-8 mb-8">
+        <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-4 md:p-8 mb-8">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
               <div className="bg-purple-600 w-12 h-12 rounded-full flex items-center justify-center">
@@ -948,7 +948,7 @@ const AdminDashboard = ({ useAuth }) => {
       {/* Assess Collateral Modal */}
       {selectedCollateral && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-2xl shadow-2xl p-4 md:p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-6">
               <div className="flex items-center gap-3">
                 <div className="bg-purple-600 w-12 h-12 rounded-full flex items-center justify-center">
@@ -1025,7 +1025,7 @@ const AdminDashboard = ({ useAuth }) => {
       {/* Create Admin Modal */}
       {showCreateAdmin && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full">
+          <div className="bg-white rounded-2xl shadow-2xl p-4 md:p-8 max-w-md w-full">
             <div className="flex justify-between items-center mb-6">
               <div className="flex items-center gap-3">
                 <div className="bg-purple-600 w-12 h-12 rounded-full flex items-center justify-center">
