@@ -1265,6 +1265,52 @@ const AdminDashboard = ({ useAuth }) => {
         </div>
       )}
 
+      {/* Image Lightbox Modal */}
+      {lightboxOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-[60] p-4">
+          <button
+            onClick={() => setLightboxOpen(false)}
+            className="absolute top-4 right-4 text-white text-4xl font-bold hover:text-gray-300 z-10"
+          >
+            ×
+          </button>
+          
+          {lightboxImages && lightboxImages.length > 0 && (
+            <>
+              {/* Navigation Arrows */}
+              {lightboxImages.length > 1 && (
+                <>
+                  <button
+                    onClick={() => setLightboxIndex((lightboxIndex - 1 + lightboxImages.length) % lightboxImages.length)}
+                    className="absolute left-4 text-white text-5xl font-bold hover:text-gray-300 z-10"
+                  >
+                    ‹
+                  </button>
+                  <button
+                    onClick={() => setLightboxIndex((lightboxIndex + 1) % lightboxImages.length)}
+                    className="absolute right-4 text-white text-5xl font-bold hover:text-gray-300 z-10"
+                  >
+                    ›
+                  </button>
+                </>
+              )}
+              
+              {/* Image */}
+              <div className="max-w-4xl max-h-[90vh] w-full">
+                <img
+                  src={lightboxImages[lightboxIndex]}
+                  alt={`Collateral ${lightboxIndex + 1}`}
+                  className="w-full h-full object-contain"
+                />
+                <p className="text-white text-center mt-4 text-lg">
+                  Image {lightboxIndex + 1} of {lightboxImages.length}
+                </p>
+              </div>
+            </>
+          )}
+        </div>
+      )}
+
       {/* Loan Calculator Modal */}
       <LoanCalculator 
         isOpen={showLoanCalculator} 
