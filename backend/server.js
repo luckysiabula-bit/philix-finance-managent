@@ -696,7 +696,10 @@ app.put('/api/admin/applications/:id/review', authenticateToken, authorize('admi
       status: status
     });
 
-    await auditLog(req.user.id, 'application_reviewed', 'loan_application', id, {}, { status, review_notes });
+    // Audit log (non-blocking)
+    auditLog(req.user.id, 'application_reviewed', 'loan_application', id, {}, { status, review_notes }).catch(err => {
+      console.error('Audit log failed (non-critical):', err.message);
+    });
 
     // If approved, automatically create the active loan
     if (status === 'approved') {
