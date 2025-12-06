@@ -483,7 +483,9 @@ const AdminDashboard = ({ useAuth }) => {
                 </div>
                 
                 {filteredApplications.length > 0 ? (
-                <div className="overflow-x-auto">
+                <>
+                {/* Desktop Table View */}
+                <div className="hidden md:block overflow-x-auto">
                 <table className="w-full min-w-[1100px]">
                   <thead>
                     <tr className="border-b-2 border-gray-200 bg-gradient-to-r from-gray-50 to-gray-100">
@@ -691,8 +693,170 @@ const AdminDashboard = ({ useAuth }) => {
                     })}
                   </tbody>
                 </table>
-              </div>
-            ) : (
+                </div>
+
+                {/* Mobile Card View */}
+                <div className="md:hidden space-y-4">
+                  {filteredApplications.map((app) => {
+                    // Find associated loan for this application
+                    const associatedLoan = loans.find(loan => loan.application_id === app.id);
+                    const isPaidLoan = associatedLoan && associatedLoan.status === 'closed' && parseFloat(associatedLoan.outstanding_balance) === 0;
+                    const isActiveLoan = associatedLoan && associatedLoan.status === 'active';
+                    
+                    return (
+                      <div key={app.id} className={`rounded-xl border-2 p-4 ${
+                        isPaidLoan ? 'bg-green-50 border-green-200' : 'bg-white border-gray-200'
+                      }`}>
+                        {/* Header - Borrower Name */}
+                        <div className="flex items-start justify-between mb-3 pb-3 border-b border-gray-200">
+                          <div className="flex-1">
+                            <h3 className="font-bold text-gray-900 text-lg">{app.full_name}</h3>
+                            <p className="text-xs text-gray-600 font-medium">ID: {app.id}</p>
+                          </div>
+                          <span className={`px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap ml-2 ${
+                            isPaidLoan ? 'bg-green-200 text-green-900' :
+                            app.status === 'pending' ? 'bg-amber-100 text-amber-800' :
+                            app.status === 'approved' ? 'bg-green-100 text-green-800' :
+                            app.status === 'rejected' ? 'bg-red-100 text-red-800' :
+                            'bg-gray-100 text-gray-800'
+                          }`}>
+                            {isPaidLoan ? '✅ PAID' : app.status.toUpperCase()}
+                          </span>
+                        </div>
+
+                        {/* Amount & Term */}
+                        <div className="grid grid-cols-2 gap-3 mb-3">
+                          <div>
+                            <p className="text-xs text-gray-600 font-medium mb-1">Amount</p>
+                            <p className="font-bold text-gray-900">ZMK {parseFloat(app.requested_amount).toLocaleString()}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-gray-600 font-medium mb-1">Term</p>
+                            <p className="font-bold text-gray-900">{app.term_months} week{app.term_months > 1 ? 's' : ''}</p>
+                          </div>
+                        </div>
+
+                        {/* Branch */}
+                        <div className="mb-3">
+                          <p className="text-xs text-gray-600 font-medium mb-1">Branch</p>
+                          {app.branch ? (
+                            <div className="flex items-center gap-2">
+                              <span className="text-lg">
+                                {app.branch === 'unza' || app.branch === 'cbu' || app.branch === 'unilus' ? '🎓' :
+                                 app.branch === 'other-institution' ? '🏫' :
+                                 app.branch === 'general-public' ? '👥' : '📍'}
+                              </span>
+                              <span className="font-bold text-gray-900 text-sm">
+                                {app.branch === 'unza' ? 'Lusaka Branch' :
+                                 app.branch === 'cbu' ? 'CBU' :
+                                 app.branch === 'unilus' ? 'UNILUS' :
+                                 app.branch === 'other-institution' ? 'Other Institution' :
+                                 app.branch === 'general-public' ? 'General Public' :
+                                 app.branch.toUpperCase()}
+                              </span>
+                            </div>
+                          ) : (
+                            <span className="text-gray-500 text-sm italic">📍 No branch specified</span>
+                          )}
+                        </div>
+
+                        {/* Purpose */}
+                        <div className="mb-3">
+                          <p className="text-xs text-gray-600 font-medium mb-1">Purpose</p>
+                          <p className="text-sm text-gray-700">{app.purpose}</p>
+                        </div>
+
+                        {/* Loan Status Info */}
+                        {isActiveLoan && (
+                          <div className="bg-blue-50 border border-blue-200 rounded-lg p-2 mb-3">
+                            <p className="text-xs font-bold text-blue-900">💰 Active Loan</p>
+                            <p className="text-xs text-blue-700">Outstanding: ZMK {parseFloat(associatedLoan.outstanding_balance).toLocaleString()}</p>
+                          </div>
+                        )}
+
+                        {isPaidLoan && (
+                          <div className="bg-green-100 border border-green-300 rounded-lg p-2 mb-3">
+                            <p className="text-xs font-bold text-green-900">✅ Loan Fully Paid</p>
+                            <p className="text-xs text-green-700">Total Paid: ZMK {parseFloat(associatedLoan.total_paid).toLocaleString()}</p>
+                          </div>
+                        )}
+
+                        {/* Actions */}
+                        {!isPaidLoan && (
+                          <div className="flex gap-2 pt-3 border-t border-gray-200">
+                            {app.status === 'pending' && (
+                              <>
+                                <button
+                                  onClick={async () => {
+                                    if (!confirm(`Approve loan application for ${app.full_name}?`)) return;
+                                    setRowWorking(app.id, 'approve');
+                                    optimisticallySetStatus(app.id, 'approved');
+                                    try {
+                                      await api.reviewApplication(app.id, 'approved', 'Approved by admin');
+                                      await loadData();
+                                    } catch (err) {
+                                      alert(err.message);
+                                      await loadData();
+                                    } finally {
+                                      clearRowWorking();
+                                    }
+                                  }}
+                                  disabled={actionState.id === app.id && actionState.type === 'approve'}
+                                  className="flex-1 bg-gradient-to-r from-green-600 to-green-700 text-white px-3 py-2 rounded-lg hover:from-green-700 hover:to-green-800 transition font-bold shadow-md text-sm disabled:opacity-50"
+                                >
+                                  {actionState.id === app.id && actionState.type === 'approve' ? '⏳' : '✅'} Approve
+                                </button>
+                                <button
+                                  onClick={async () => {
+                                    const notes = prompt(`Rejection reason for ${app.full_name}:`, 'Insufficient collateral');
+                                    if (!notes) return;
+                                    setRowWorking(app.id, 'reject');
+                                    optimisticallySetStatus(app.id, 'rejected');
+                                    try {
+                                      await api.reviewApplication(app.id, 'rejected', notes);
+                                      await loadData();
+                                    } catch (err) {
+                                      alert(err.message);
+                                      await loadData();
+                                    } finally {
+                                      clearRowWorking();
+                                    }
+                                  }}
+                                  disabled={actionState.id === app.id && actionState.type === 'reject'}
+                                  className="flex-1 bg-gradient-to-r from-red-600 to-red-700 text-white px-3 py-2 rounded-lg hover:from-red-700 hover:to-red-800 transition font-bold shadow-md text-sm disabled:opacity-50"
+                                >
+                                  {actionState.id === app.id && actionState.type === 'reject' ? '⏳' : '❌'} Reject
+                                </button>
+                              </>
+                            )}
+                            <button
+                              onClick={async () => {
+                                if (!confirm(`Delete application for ${app.full_name}? This cannot be undone.`)) return;
+                                setRowWorking(app.id, 'delete');
+                                optimisticallyRemove(app.id);
+                                try {
+                                  await api.deleteApplication(app.id);
+                                  await loadData();
+                                } catch (err) {
+                                  alert(err.message);
+                                  await loadData();
+                                } finally {
+                                  clearRowWorking();
+                                }
+                              }}
+                              disabled={actionState.id === app.id && actionState.type === 'delete'}
+                              className="px-3 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition font-bold shadow-md text-sm disabled:opacity-50"
+                            >
+                              {actionState.id === app.id && actionState.type === 'delete' ? '⏳' : '🗑️'}
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+                </>
+              ) : (
               <div className="text-center py-12 bg-gray-50 rounded-xl">
                 <div className="text-6xl mb-4">📄</div>
                 <p className="text-gray-700 text-lg font-semibold">No applications match your filters</p>
