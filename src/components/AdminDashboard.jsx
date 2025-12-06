@@ -253,15 +253,15 @@ const AdminDashboard = ({ useAuth }) => {
       <header className="bg-white shadow-lg border-b-2 border-indigo-200 sticky top-0 z-40">
         <div className="max-w-full md:max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 py-2 md:py-4">
           <div className="flex justify-between items-center gap-2">
-            <div className="flex items-center gap-1 md:gap-4 flex-shrink min-w-0">
+            <div className="flex items-center justify-center gap-1 md:gap-4 flex-1 min-w-0">
               <img 
                 src="/company-logo.png" 
                 alt="Company Logo" 
                 className="h-8 w-8 object-contain flex-shrink-0"
                 style={{maxHeight: '32px', maxWidth: '32px'}}
               />
-              <div className="min-w-0 hidden md:block">
-                <h1 className="text-lg md:text-3xl font-bold text-gray-900 truncate">PHILIX Finance</h1>
+              <div className="min-w-0 hidden md:block text-center">
+                <h1 className="text-lg md:text-3xl font-bold text-gray-900">PHILIX Finance</h1>
                 <p className="text-xs md:text-sm text-gray-700 font-medium">Admin Dashboard</p>
               </div>
             </div>

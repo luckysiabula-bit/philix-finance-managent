@@ -232,15 +232,15 @@ const BorrowerDashboard = ({ useAuth }) => {
       <header className="bg-white shadow-lg border-b-2 border-indigo-200 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3 md:py-6">
           <div className="flex justify-between items-center">
-            <div className="flex items-center gap-2 md:gap-4 flex-1 min-w-0">
+            <div className="flex items-center justify-center gap-2 md:gap-4 flex-1 min-w-0">
               <img 
                 src="/company-logo.png" 
                 alt="Company Logo" 
                 className="h-8 w-8 object-contain flex-shrink-0"
                 style={{maxHeight: '32px', maxWidth: '32px'}}
               />
-              <div className="min-w-0">
-                <h1 className="text-lg md:text-3xl font-bold text-gray-900 truncate">PHILIX Finance</h1>
+              <div className="min-w-0 text-center">
+                <h1 className="text-lg md:text-3xl font-bold text-gray-900">PHILIX Finance</h1>
                 <p className="text-xs md:text-sm text-gray-700 font-medium hidden sm:block">Your Trusted Financial Partner</p>
               </div>
             </div>
