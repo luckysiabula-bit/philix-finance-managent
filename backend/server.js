@@ -768,7 +768,10 @@ app.put('/api/admin/applications/:id/review', authenticateToken, authorize('admi
           );
         }
 
-        await auditLog(req.user.id, 'loan_disbursed', 'loan', loanId, {}, { appId: id, amount: app.requested_amount });
+        // Audit log (non-blocking)
+        auditLog(req.user.id, 'loan_disbursed', 'loan', loanId, {}, { appId: id, amount: app.requested_amount }).catch(err => {
+          console.error('Audit log failed (non-critical):', err.message);
+        });
       }
     }
 
@@ -776,8 +779,8 @@ app.put('/api/admin/applications/:id/review', authenticateToken, authorize('admi
     res.json({ message: `Application ${status}${status === 'approved' ? ' and loan activated' : ''}` });
   } catch (err) {
     await connection.rollback();
-    console.error(err);
-    res.status(500).json({ error: 'Server error' });
+    console.error('❌ Review application error:', err);
+    res.status(500).json({ error: 'Server error', details: err.message });
   } finally {
     connection.release();
   }
