@@ -1276,11 +1276,22 @@ const AdminDashboard = ({ useAuth }) => {
       {/* Image Lightbox Modal */}
       {lightboxOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-[60] p-4">
+          {/* Close Button (X) */}
           <button
             onClick={() => setLightboxOpen(false)}
-            className="absolute top-4 right-4 text-white text-4xl font-bold hover:text-gray-300 z-10"
+            className="absolute top-4 right-4 text-white text-4xl font-bold hover:text-gray-300 z-10 w-12 h-12 flex items-center justify-center bg-black/30 rounded-full hover:bg-black/50 transition"
+            title="Close"
           >
             ×
+          </button>
+
+          {/* Back Arrow Button */}
+          <button
+            onClick={() => setLightboxOpen(false)}
+            className="absolute top-4 left-4 text-white text-2xl font-bold hover:text-gray-300 z-10 flex items-center gap-2 bg-black/30 px-4 py-2 rounded-lg hover:bg-black/50 transition"
+            title="Back to Collateral"
+          >
+            ← Back
           </button>
           
           {lightboxImages && lightboxImages.length > 0 && (
@@ -1290,13 +1301,15 @@ const AdminDashboard = ({ useAuth }) => {
                 <>
                   <button
                     onClick={() => setLightboxIndex((lightboxIndex - 1 + lightboxImages.length) % lightboxImages.length)}
-                    className="absolute left-4 text-white text-5xl font-bold hover:text-gray-300 z-10"
+                    className="absolute left-4 top-1/2 -translate-y-1/2 text-white text-6xl font-bold hover:text-gray-300 z-10 w-16 h-16 flex items-center justify-center bg-black/30 rounded-full hover:bg-black/50 transition"
+                    title="Previous Image"
                   >
                     ‹
                   </button>
                   <button
                     onClick={() => setLightboxIndex((lightboxIndex + 1) % lightboxImages.length)}
-                    className="absolute right-4 text-white text-5xl font-bold hover:text-gray-300 z-10"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-white text-6xl font-bold hover:text-gray-300 z-10 w-16 h-16 flex items-center justify-center bg-black/30 rounded-full hover:bg-black/50 transition"
+                    title="Next Image"
                   >
                     ›
                   </button>
@@ -1308,11 +1321,16 @@ const AdminDashboard = ({ useAuth }) => {
                 <img
                   src={lightboxImages[lightboxIndex]}
                   alt={`Collateral ${lightboxIndex + 1}`}
-                  className="w-full h-full object-contain"
+                  className="w-full h-full object-contain rounded-lg"
                 />
-                <p className="text-white text-center mt-4 text-lg">
-                  Image {lightboxIndex + 1} of {lightboxImages.length}
-                </p>
+                <div className="text-white text-center mt-4 space-y-1">
+                  <p className="text-lg font-semibold">
+                    Image {lightboxIndex + 1} of {lightboxImages.length}
+                  </p>
+                  <p className="text-sm text-gray-300">
+                    Use ← → arrows to navigate • Click "Back" or "×" to return
+                  </p>
+                </div>
               </div>
             </>
           )}
