@@ -1275,15 +1275,17 @@ const AdminDashboard = ({ useAuth }) => {
 
       {/* Image Lightbox Modal */}
       {lightboxOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-[60] p-4">
+        <div className="fixed inset-0 bg-black bg-opacity-90 z-[60]">
           {/* Back Arrow Button */}
           <button
             onClick={() => setLightboxOpen(false)}
-            className="absolute top-4 right-4 text-black text-lg font-bold z-10 flex items-center gap-2 bg-white px-6 py-3 rounded-lg hover:bg-gray-100 transition shadow-lg"
+            className="fixed top-4 right-4 text-black text-lg font-bold z-[70] flex items-center gap-2 bg-white px-6 py-3 rounded-lg hover:bg-gray-100 transition shadow-lg"
             title="Back to Collateral"
           >
             ← Back
           </button>
+          
+          <div className="flex items-center justify-center h-full w-full p-4">
           
           {lightboxImages && lightboxImages.length > 0 && (
             <>
@@ -1325,6 +1327,7 @@ const AdminDashboard = ({ useAuth }) => {
               </div>
             </>
           )}
+          </div>
         </div>
       )}
 
