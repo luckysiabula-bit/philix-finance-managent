@@ -1182,8 +1182,8 @@ const BorrowerDashboard = ({ useAuth }) => {
 
       {/* Payment Modal */}
       {showPaymentModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl p-6 max-w-md w-full">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 overflow-y-auto">
+          <div className="bg-white rounded-xl p-6 max-w-md w-full my-8 max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold text-gray-800">Make Payment</h2>
               <button 
@@ -1312,7 +1312,7 @@ const BorrowerDashboard = ({ useAuth }) => {
               )}
 
               {/* Submit Buttons */}
-              <div className="flex gap-3 pt-4">
+              <div className="flex gap-3 pt-4 sticky bottom-0 bg-white pb-2 -mx-6 px-6 border-t border-gray-200 mt-4">
                 <button
                   type="button"
                   onClick={() => setShowPaymentModal(false)}
