@@ -1105,16 +1105,24 @@ const AdminDashboard = ({ useAuth }) => {
             {Array.isArray(selectedCollateral.images) && selectedCollateral.images.length > 0 && (
               <div className="mb-6">
                 <h3 className="text-lg font-bold text-gray-900 mb-3">📸 Collateral Photos</h3>
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                   {selectedCollateral.images.map((img, idx) => (
-                    <div key={idx} className="relative group cursor-pointer" onClick={() => {
+                    <div key={idx} className="relative cursor-pointer bg-gray-100 rounded-lg overflow-hidden" onClick={() => {
                       setLightboxImages(selectedCollateral.images);
                       setLightboxIndex(idx);
                       setLightboxOpen(true);
                     }}>
-                      <img src={img} alt={`Collateral ${idx+1}`} className="w-full h-32 object-cover rounded-lg border-2 border-gray-200 hover:border-blue-500 transition-all" />
-                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all rounded-lg flex items-center justify-center">
-                        <span className="text-white opacity-0 group-hover:opacity-100 font-semibold">🔍 View</span>
+                      <img 
+                        src={img} 
+                        alt={`Collateral ${idx+1}`} 
+                        className="w-full h-32 md:h-40 object-cover hover:opacity-90 transition-opacity" 
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="200"%3E%3Crect fill="%23ddd" width="200" height="200"/%3E%3Ctext fill="%23999" x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle"%3EImage Error%3C/text%3E%3C/svg%3E';
+                        }}
+                      />
+                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-2">
+                        <span className="text-white text-xs font-semibold">🔍 Click to enlarge</span>
                       </div>
                     </div>
                   ))}
