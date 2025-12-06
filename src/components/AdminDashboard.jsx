@@ -1288,7 +1288,7 @@ const AdminDashboard = ({ useAuth }) => {
           {/* Back Arrow Button */}
           <button
             onClick={() => setLightboxOpen(false)}
-            className="absolute top-4 left-4 text-white text-2xl font-bold hover:text-gray-300 z-10 flex items-center gap-2 bg-black/30 px-4 py-2 rounded-lg hover:bg-black/50 transition"
+            className="absolute bottom-8 left-1/2 -translate-x-1/2 text-black text-xl font-bold z-10 flex items-center gap-2 bg-white px-6 py-3 rounded-lg hover:bg-gray-100 transition shadow-lg"
             title="Back to Collateral"
           >
             ← Back
