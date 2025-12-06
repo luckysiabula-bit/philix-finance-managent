@@ -1062,15 +1062,20 @@ const AdminDashboard = ({ useAuth }) => {
       {/* Assess Collateral Modal */}
       {selectedCollateral && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl shadow-2xl p-4 md:p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-center mb-6">
-              <div className="flex items-center gap-3">
-                <div className="bg-purple-600 w-12 h-12 rounded-full flex items-center justify-center">
-                  <span className="text-white text-2xl">📦</span>
-                </div>
-                <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Assess Collateral</h2>
+          <div className="bg-white rounded-2xl shadow-2xl p-4 md:p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto relative">
+            {/* Close/Back Button - Top Right */}
+            <button 
+              className="absolute top-4 right-4 text-black text-lg font-bold flex items-center gap-2 bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg transition-colors shadow-md z-10" 
+              onClick={()=>setSelectedCollateral(null)}
+            >
+              ← Back
+            </button>
+
+            <div className="flex items-center gap-3 mb-6 pr-24">
+              <div className="bg-purple-600 w-12 h-12 rounded-full flex items-center justify-center">
+                <span className="text-white text-2xl">📦</span>
               </div>
-              <button className="text-gray-500 hover:text-gray-700 text-2xl md:text-3xl font-bold transition-colors" onClick={()=>setSelectedCollateral(null)}>×</button>
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Assess Collateral</h2>
             </div>
 
             {/* Collateral Details */}
