@@ -197,6 +197,7 @@ const AdminDashboard = ({ useAuth }) => {
   const [branchFilter, setBranchFilter] = useState(''); // Branch filtering state
   const [loanStatusFilter, setLoanStatusFilter] = useState('all'); // 'all', 'active', 'closed'
   const [showPaidLoans, setShowPaidLoans] = useState(false); // Show/hide fully paid loans in applications
+  const [activeTab, setActiveTab] = useState('overview'); // 'overview', 'applications', 'collateral'
   const { logout } = useAuth();
 
   useEffect(() => {
@@ -288,8 +289,47 @@ const AdminDashboard = ({ useAuth }) => {
         </div>
       </header>
 
+      {/* Tab Navigation */}
+      <div className="bg-white border-b border-gray-200 sticky top-[60px] md:top-[76px] z-30 shadow-sm">
+        <div className="max-w-full md:max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
+          <div className="flex gap-1 md:gap-2 overflow-x-auto">
+            <button
+              onClick={() => setActiveTab('overview')}
+              className={`px-3 md:px-6 py-3 md:py-4 font-bold text-xs md:text-base whitespace-nowrap transition-all ${
+                activeTab === 'overview'
+                  ? 'border-b-4 border-indigo-600 text-indigo-600 bg-indigo-50'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+              }`}
+            >
+              📊 Overview
+            </button>
+            <button
+              onClick={() => setActiveTab('applications')}
+              className={`px-3 md:px-6 py-3 md:py-4 font-bold text-xs md:text-base whitespace-nowrap transition-all ${
+                activeTab === 'applications'
+                  ? 'border-b-4 border-orange-600 text-orange-600 bg-orange-50'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+              }`}
+            >
+              📄 Applications {applications?.length > 0 && `(${applications.length})`}
+            </button>
+            <button
+              onClick={() => setActiveTab('collateral')}
+              className={`px-3 md:px-6 py-3 md:py-4 font-bold text-xs md:text-base whitespace-nowrap transition-all ${
+                activeTab === 'collateral'
+                  ? 'border-b-4 border-purple-600 text-purple-600 bg-purple-50'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+              }`}
+            >
+              📦 Collateral {adminCollateral?.filter(c => c.status === 'pending').length > 0 && `(${adminCollateral.filter(c => c.status === 'pending').length})`}
+            </button>
+          </div>
+        </div>
+      </div>
+
       <div className="max-w-full md:max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-4">
-        {/* Welcome Section */}
+        {/* Overview Tab */}
+        {activeTab === 'overview' && (
         <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-4 mb-4">
           <h2 className="text-lg md:text-xl font-bold text-gray-900 mb-2">Admin Overview</h2>
           <p className="text-sm md:text-base text-gray-700 mb-4 md:mb-6 font-medium">Monitor and manage all loan applications, collateral, and portfolio performance</p>
@@ -339,8 +379,10 @@ const AdminDashboard = ({ useAuth }) => {
             </div>
           </div>
         </div>
+        )}
 
-        {/* Applications Table */}
+        {/* Applications Tab */}
+        {activeTab === 'applications' && (
         <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-4 md:p-8 mb-8">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
@@ -846,8 +888,10 @@ const AdminDashboard = ({ useAuth }) => {
             );
           })()}
         </div>
+        )}
 
-        {/* Collateral Management */}
+        {/* Collateral Tab */}
+        {activeTab === 'collateral' && (
         <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-4 md:p-8 mb-8">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
@@ -943,6 +987,7 @@ const AdminDashboard = ({ useAuth }) => {
             );
           })()}
         </div>
+        )}
       </div>
 
       {/* Assess Collateral Modal */}
