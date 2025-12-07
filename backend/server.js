@@ -611,9 +611,10 @@ app.get('/api/admin/applications', authenticateToken, authorize('admin', 'underw
   try {
     const [applications] = await pool.execute(
       `SELECT la.id, la.requested_amount, la.term_months, la.purpose, la.branch, la.status, 
-              la.created_at, b.full_name, p.name as product_name
+              la.created_at, b.full_name, p.name as product_name, u.phone_number
        FROM loan_applications la
        JOIN borrowers b ON la.borrower_id = b.id
+       JOIN users u ON b.user_id = u.id
        JOIN loan_products p ON la.loan_product_id = p.id
        ORDER BY la.created_at DESC`
     );
