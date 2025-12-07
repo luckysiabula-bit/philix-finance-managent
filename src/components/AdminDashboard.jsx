@@ -992,9 +992,9 @@ const AdminDashboard = ({ useAuth }) => {
                                 onAssess={async (assessedValue) => {
                                   try {
                                     // Show immediate feedback with more reliable selector
-                                    const saveButton = document.querySelector('button:contains("Save Assessment")') || 
-                                                     document.querySelector('button[class*="bg-indigo-600"]') ||
-                                                     event.target;
+                                    const saveButton = [...document.querySelectorAll('button')].find(btn => 
+                                      btn.textContent.includes('Save Assessment')
+                                    ) || event?.target;
                                     
                                     if (saveButton) {
                                       const originalText = saveButton.textContent;
@@ -1025,7 +1025,9 @@ const AdminDashboard = ({ useAuth }) => {
                                     alert('❌ Error: ' + err.message);
                                     
                                     // Re-enable button on error
-                                    const saveButton = document.querySelector('button[class*="bg-indigo-600"]') || event.target;
+                                    const saveButton = [...document.querySelectorAll('button')].find(btn => 
+                                      btn.textContent.includes('Saving Assessment')
+                                    ) || event?.target;
                                     if (saveButton) {
                                       saveButton.textContent = '✅ Save Assessment';
                                       saveButton.disabled = false;
