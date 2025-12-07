@@ -929,10 +929,10 @@ const AdminDashboard = ({ useAuth }) => {
                                 setLightboxIndex(0);
                                 setLightboxOpen(true);
                               }}>
-                                <img src={item.images[0]} alt="thumb" className="w-12 h-12 object-cover rounded-lg border-2 border-indigo-200 hover:border-indigo-500 transition-all shadow-sm hover:shadow-md" />
+                                <img src={item.images[0]} alt="thumb" className="w-12 h-12 object-cover rounded-lg border-2 border-indigo-200 hover:border-indigo-500 transition-all shadow-sm hover:shadow-md" loading="lazy" decoding="async" />
                                 {/* Hover preview - larger thumbnail */}
                                 <div className="absolute left-0 top-0 z-50 hidden group-hover:block">
-                                  <img src={item.images[0]} alt="preview" className="w-32 h-32 object-cover rounded-lg shadow-2xl border-4 border-white" style={{transform: 'translate(-10px, -10px)'}} />
+                                  <img src={item.images[0]} alt="preview" className="w-32 h-32 object-cover rounded-lg shadow-2xl border-4 border-white" style={{transform: 'translate(-10px, -10px)'}} loading="lazy" decoding="async" />
                                 </div>
                               </div>
                               <span className="text-sm text-gray-900 font-bold">{item.images.length} photo{item.images.length>1?'s':''}</span>
@@ -947,10 +947,15 @@ const AdminDashboard = ({ useAuth }) => {
                         </td>
                         <td className="py-4 px-4">
                           <button 
-                            className="bg-gradient-to-r from-green-600 to-green-700 text-black px-4 py-2 rounded-lg hover:from-green-700 hover:to-green-800 transition font-black shadow-lg hover:shadow-xl border-2 border-green-400 text-lg" 
-                            onClick={()=>setSelectedCollateral(item)}
+                            className="bg-gradient-to-r from-green-600 to-green-700 text-black px-4 py-2 rounded-lg hover:from-green-700 hover:to-green-800 transition font-black shadow-lg hover:shadow-xl border-2 border-green-400 text-lg disabled:opacity-50 disabled:cursor-not-allowed" 
+                            onClick={(e)=>{
+                              e.preventDefault();
+                              e.stopPropagation();
+                              setSelectedCollateral(item);
+                            }}
+                            disabled={actionState.id === item.id}
                           >
-                            📝 Assess
+                            {actionState.id === item.id ? '⏳ Opening...' : '📝 Assess'}
                           </button>
                         </td>
                       </tr>
@@ -1013,7 +1018,7 @@ const AdminDashboard = ({ useAuth }) => {
                               setLightboxIndex(idx);
                               setLightboxOpen(true);
                             }}>
-                              <img src={img} alt={`Photo ${idx+1}`} className="w-full h-20 object-cover rounded-lg border-2 border-indigo-200" />
+                              <img src={img} alt={`Photo ${idx+1}`} className="w-full h-20 object-cover rounded-lg border-2 border-indigo-200" loading="lazy" decoding="async" />
                               {item.images.length > 3 && idx === 2 && (
                                 <div className="absolute inset-0 bg-black bg-opacity-50 rounded-lg flex items-center justify-center">
                                   <span className="text-white font-bold text-sm">+{item.images.length - 3}</span>
@@ -1032,10 +1037,15 @@ const AdminDashboard = ({ useAuth }) => {
 
                     {/* Action Button */}
                     <button 
-                      className="w-full bg-gradient-to-r from-green-600 to-green-700 text-white px-4 py-3 rounded-lg hover:from-green-700 hover:to-green-800 transition font-bold shadow-md text-base mt-3" 
-                      onClick={()=>setSelectedCollateral(item)}
+                      className="w-full bg-gradient-to-r from-green-600 to-green-700 text-white px-4 py-3 rounded-lg hover:from-green-700 hover:to-green-800 transition font-bold shadow-md text-base mt-3 disabled:opacity-50 disabled:cursor-not-allowed" 
+                      onClick={(e)=>{
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setSelectedCollateral(item);
+                      }}
+                      disabled={actionState.id === item.id}
                     >
-                      📝 Assess Collateral
+                      {actionState.id === item.id ? '⏳ Opening...' : '📝 Assess Collateral'}
                     </button>
                   </div>
                 ))}
@@ -1121,6 +1131,8 @@ const AdminDashboard = ({ useAuth }) => {
                         src={img} 
                         alt={`Collateral ${idx+1}`} 
                         className="w-full h-32 md:h-40 object-cover hover:opacity-90 transition-opacity" 
+                        loading="lazy"
+                        decoding="async"
                         onError={(e) => {
                           e.target.onerror = null;
                           e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="200"%3E%3Crect fill="%23ddd" width="200" height="200"/%3E%3Ctext fill="%23999" x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle"%3EImage Error%3C/text%3E%3C/svg%3E';
