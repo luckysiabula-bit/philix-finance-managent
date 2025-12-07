@@ -991,15 +991,46 @@ const AdminDashboard = ({ useAuth }) => {
                                 item={item}
                                 onAssess={async (assessedValue) => {
                                   try {
+                                    // Show immediate feedback with more reliable selector
+                                    const saveButton = document.querySelector('button:contains("Save Assessment")') || 
+                                                     document.querySelector('button[class*="bg-indigo-600"]') ||
+                                                     event.target;
+                                    
+                                    if (saveButton) {
+                                      const originalText = saveButton.textContent;
+                                      saveButton.textContent = '⏳ Saving Assessment...';
+                                      saveButton.disabled = true;
+                                      saveButton.style.opacity = '0.7';
+                                    }
+                                    
                                     await api.assessCollateral(item.id, {
                                       assessed_value: assessedValue,
                                       status: 'approved'
                                     });
-                                    alert(`✅ Collateral assessed at ZMK ${assessedValue.toLocaleString()}`);
+                                    
+                                    // Close assessment panel immediately
                                     setSelectedCollateral(null);
-                                    await loadData();
+                                    
+                                    // Show success message
+                                    alert(`✅ Collateral assessed at ZMK ${assessedValue.toLocaleString()}`);
+                                    
+                                    // Only reload collateral data (much faster than loadData())
+                                    try {
+                                      const colData = await api.getAllCollateral();
+                                      setAdminCollateral(Array.isArray(colData) ? colData : []);
+                                    } catch (reloadErr) {
+                                      console.log('Reload error (non-critical):', reloadErr);
+                                    }
                                   } catch (err) {
                                     alert('❌ Error: ' + err.message);
+                                    
+                                    // Re-enable button on error
+                                    const saveButton = document.querySelector('button[class*="bg-indigo-600"]') || event.target;
+                                    if (saveButton) {
+                                      saveButton.textContent = '✅ Save Assessment';
+                                      saveButton.disabled = false;
+                                      saveButton.style.opacity = '1';
+                                    }
                                   }
                                 }}
                               />
