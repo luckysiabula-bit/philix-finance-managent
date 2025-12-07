@@ -486,10 +486,11 @@ const AdminDashboard = ({ useAuth }) => {
                 <>
                 {/* Desktop Table View */}
                 <div className="hidden md:block overflow-x-auto">
-                <table className="w-full min-w-[1100px]">
+                <table className="w-full min-w-[1300px]">
                   <thead>
                     <tr className="border-b-2 border-gray-200 bg-gradient-to-r from-gray-50 to-gray-100">
                       <th className="text-left py-4 px-4 font-bold text-gray-800 w-[160px]">Borrower</th>
+                      <th className="text-left py-4 px-4 font-bold text-gray-800 w-[140px]">📞 Contact</th>
                       <th className="text-left py-4 px-4 font-bold text-gray-800 w-[140px]">Amount / Term</th>
                       <th className="text-left py-4 px-4 font-bold text-gray-800">Purpose</th>
                       <th className="text-left py-4 px-4 font-bold text-gray-800 w-[150px]">🎓 Branch</th>
@@ -512,6 +513,20 @@ const AdminDashboard = ({ useAuth }) => {
                       <td className="py-4 px-4">
                         <div className="font-bold text-gray-900">{app.full_name}</div>
                         <div className="text-xs text-gray-600 font-medium">ID: {app.id}</div>
+                      </td>
+                      <td className="py-4 px-4">
+                        {app.phone_number ? (
+                          <a 
+                            href={`tel:${app.phone_number}`} 
+                            className="flex items-center gap-2 text-blue-600 hover:text-blue-800 font-bold transition-colors group"
+                            title="Click to call"
+                          >
+                            <span className="text-lg group-hover:scale-110 transition-transform">📞</span>
+                            <span className="underline">{app.phone_number}</span>
+                          </a>
+                        ) : (
+                          <span className="text-gray-500 text-sm italic">No phone</span>
+                        )}
                       </td>
                       <td className="py-4 px-4">
                         <div className="font-bold text-gray-900">ZMK {parseFloat(app.requested_amount).toLocaleString()}</div>
@@ -723,6 +738,19 @@ const AdminDashboard = ({ useAuth }) => {
                             {isPaidLoan ? '✅ PAID' : app.status.toUpperCase()}
                           </span>
                         </div>
+
+                        {/* Phone Number */}
+                        {app.phone_number && (
+                          <div className="mb-3 pb-3 border-b border-gray-200">
+                            <p className="text-xs text-gray-600 font-medium mb-1">📞 Contact</p>
+                            <a 
+                              href={`tel:${app.phone_number}`} 
+                              className="text-blue-600 hover:text-blue-800 font-bold underline text-base"
+                            >
+                              {app.phone_number}
+                            </a>
+                          </div>
+                        )}
 
                         {/* Amount & Term */}
                         <div className="grid grid-cols-2 gap-3 mb-3">
