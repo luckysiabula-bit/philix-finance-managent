@@ -908,24 +908,261 @@ const AdminDashboard = ({ useAuth }) => {
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
               <div className="bg-purple-600 w-12 h-12 rounded-full flex items-center justify-center">
-                <span className="text-white text-2xl">📦</span>
+                <CreditCard className="text-white" size={24} />
               </div>
-              <h2 className="text-xl md:text-2xl font-bold text-gray-900">Collateral Management</h2>
+              <h2 className="text-xl md:text-2xl font-bold text-gray-900">Collateral Assessment</h2>
             </div>
-            <button
-              className="bg-gradient-to-r from-blue-600 to-blue-700 text-black px-4 py-2 rounded-lg hover:from-blue-700 hover:to-blue-800 transition font-black shadow-lg hover:shadow-xl border-2 border-blue-400 text-lg"
-              onClick={async()=>{
-                try{
-                  const data = await api.getAllCollateral();
-                  setAdminCollateral(Array.isArray(data)?data:[]);
-                }catch(err){
-                  alert(err.message);
-                }
-              }}
-            >🔄 Refresh</button>
           </div>
 
-          {(() => {
+          <div className="max-h-[calc(100vh-300px)] overflow-y-auto">
+            {adminCollateral && adminCollateral.length > 0 ? (
+              <div className="space-y-6">
+                {adminCollateral.map((item) => (
+                  <div key={item.id} className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl border-2 border-purple-200 p-6">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                      {/* Collateral Info */}
+                      <div className="space-y-4">
+                        <h3 className="text-xl font-bold text-purple-900 mb-4">📋 Collateral Details</h3>
+                        <div className="bg-white rounded-lg p-4 shadow-sm">
+                          <div className="grid grid-cols-1 gap-3">
+                            <div>
+                              <span className="text-sm font-semibold text-gray-600">Type:</span>
+                              <span className="ml-2 font-bold text-gray-900">{item.collateral_type}</span>
+                            </div>
+                            <div>
+                              <span className="text-sm font-semibold text-gray-600">Description:</span>
+                              <span className="ml-2 text-gray-900">{item.description}</span>
+                            </div>
+                            <div>
+                              <span className="text-sm font-semibold text-gray-600">Market Value:</span>
+                              <span className="ml-2 font-bold text-green-600">ZMK {parseFloat(item.market_value || 0).toLocaleString()}</span>
+                            </div>
+                            <div>
+                              <span className="text-sm font-semibold text-gray-600">Status:</span>
+                              <span className={`ml-2 px-2 py-1 rounded text-xs font-bold ${
+                                item.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                                item.status === 'approved' ? 'bg-green-100 text-green-800' :
+                                'bg-red-100 text-red-800'
+                              }`}>
+                                {item.status?.toUpperCase()}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Images */}
+                        {item.images && item.images.length > 0 && (
+                          <div>
+                            <h4 className="font-semibold text-gray-700 mb-2">📸 Images</h4>
+                            <div className="grid grid-cols-2 gap-2">
+                              {item.images.slice(0, 4).map((img, idx) => (
+                                <img
+                                  key={idx}
+                                  src={img}
+                                  alt={`Collateral ${idx + 1}`}
+                                  className="w-full h-24 object-cover rounded-lg border cursor-pointer hover:shadow-lg transition"
+                                  onClick={() => {
+                                    setLightboxImages(item.images);
+                                    setLightboxIndex(idx);
+                                    setLightboxOpen(true);
+                                  }}
+                                />
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Assessment Panel */}
+                      <div className="space-y-4">
+                        {selectedCollateral?.id === item.id ? (
+                          <div>
+                            <div className="flex items-center justify-between mb-4">
+                              <h3 className="text-xl font-bold text-green-900">💰 Assessment Panel</h3>
+                              <button
+                                onClick={() => setSelectedCollateral(null)}
+                                className="text-gray-500 hover:text-gray-700 text-lg"
+                              >
+                                ✕
+                              </button>
+                            </div>
+                            <div className="max-h-[60vh] overflow-y-auto">
+                              <CollateralAssessment
+                                item={item}
+                                onAssess={async (assessedValue) => {
+                                  try {
+                                    await api.assessCollateral(item.id, {
+                                      assessed_value: assessedValue,
+                                      status: 'approved'
+                                    });
+                                    alert(`✅ Collateral assessed at ZMK ${assessedValue.toLocaleString()}`);
+                                    setSelectedCollateral(null);
+                                    await loadData();
+                                  } catch (err) {
+                                    alert('❌ Error: ' + err.message);
+                                  }
+                                }}
+                              />
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="text-center py-8">
+                            <button
+                              onClick={() => setSelectedCollateral(item)}
+                              className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold text-lg px-8 py-4 rounded-xl hover:from-purple-700 hover:to-indigo-700 transition shadow-lg hover:shadow-xl"
+                            >
+                              🔍 Assess Collateral
+                            </button>
+                            <p className="text-gray-600 text-sm mt-2">Click to open assessment panel</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <div className="text-gray-400 text-6xl mb-4">📦</div>
+                <h3 className="text-xl font-bold text-gray-600 mb-2">No Collateral Items</h3>
+                <p className="text-gray-500">No collateral submissions found for assessment.</p>
+              </div>
+            )}
+          </div>
+        </div>
+        )}
+      </div>
+
+      {/* Modals and Overlays */}
+      {showLoanCalculator && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold text-gray-900">🧮 Loan Calculator</h2>
+                <button
+                  onClick={() => setShowLoanCalculator(false)}
+                  className="text-gray-500 hover:text-gray-700 text-2xl"
+                >
+                  ✕
+                </button>
+              </div>
+              <LoanCalculator mode={calculatorMode} setMode={setCalculatorMode} />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showCreateAdmin && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold text-gray-900">👤 Create Admin</h2>
+              <button
+                onClick={() => setShowCreateAdmin(false)}
+                className="text-gray-500 hover:text-gray-700 text-xl"
+              >
+                ✕
+              </button>
+            </div>
+            <form onSubmit={async (e) => {
+              e.preventDefault();
+              try {
+                await api.createAdmin(adminForm);
+                alert('Admin created successfully!');
+                setShowCreateAdmin(false);
+                setAdminForm({ email: '', password: '', full_name: '', phone_number: '' });
+              } catch (err) {
+                alert('Error: ' + err.message);
+              }
+            }}>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+                  <input
+                    type="email"
+                    required
+                    value={adminForm.email}
+                    onChange={(e) => setAdminForm(prev => ({ ...prev, email: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Full Name</label>
+                  <input
+                    type="text"
+                    required
+                    value={adminForm.full_name}
+                    onChange={(e) => setAdminForm(prev => ({ ...prev, full_name: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Phone Number</label>
+                  <input
+                    type="tel"
+                    value={adminForm.phone_number}
+                    onChange={(e) => setAdminForm(prev => ({ ...prev, phone_number: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Password</label>
+                  <input
+                    type="password"
+                    required
+                    value={adminForm.password}
+                    onChange={(e) => setAdminForm(prev => ({ ...prev, password: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white font-bold py-2 px-4 rounded-lg hover:from-purple-700 hover:to-purple-800 transition"
+                >
+                  Create Admin
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {lightboxOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
+          <div className="relative max-w-4xl max-h-full p-4">
+            <button
+              onClick={() => setLightboxOpen(false)}
+              className="absolute top-4 right-4 text-white text-2xl hover:text-gray-300"
+            >
+              ✕
+            </button>
+            <img
+              src={lightboxImages[lightboxIndex]}
+              alt="Collateral"
+              className="max-w-full max-h-full object-contain"
+            />
+            {lightboxImages.length > 1 && (
+              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2">
+                {lightboxImages.map((_, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setLightboxIndex(idx)}
+                    className={`w-3 h-3 rounded-full ${
+                      idx === lightboxIndex ? 'bg-white' : 'bg-gray-400'
+                    }`}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default AdminDashboard;
             // Filter out collateral that has already been assessed
             const unassessedCollateral = adminCollateral?.filter(item => !item.assessed_value) || [];
             

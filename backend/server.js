@@ -191,9 +191,9 @@ app.post('/api/auth/create-admin', async (req, res) => {
 
     // Create admin user - match actual table structure
     const [userResult] = await pool.execute(
-      `INSERT INTO users (email, password_hash, role)
-       VALUES (?, ?, 'admin')`,
-      [email, passwordHash]
+      `INSERT INTO users (email, password_hash, role, phone_number)
+       VALUES (?, ?, 'admin', ?)`,
+      [email, passwordHash, phone_number]
     );
 
     const userId = userResult.insertId;
@@ -238,9 +238,9 @@ app.post('/api/auth/register', async (req, res) => {
 
     // Create user - match actual table structure
     const [userResult] = await pool.execute(
-      `INSERT INTO users (email, password_hash, role)
-       VALUES (?, ?, 'borrower')`,
-      [email, passwordHash]
+      `INSERT INTO users (email, password_hash, role, phone_number)
+       VALUES (?, ?, 'borrower', ?)`,
+      [email, passwordHash, phone_number]
     );
 
     const userId = userResult.insertId;
