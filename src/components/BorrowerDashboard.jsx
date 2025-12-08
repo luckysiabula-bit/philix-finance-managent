@@ -851,7 +851,7 @@ const BorrowerDashboard = ({ useAuth }) => {
               </div>
               <button 
                 onClick={() => setShowCollateralModal(false)}
-                className="text-gray-500 hover:text-gray-700 text-2xl"
+                className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 text-3xl font-bold p-2 rounded-full transition-all"
               >
                 ×
               </button>
