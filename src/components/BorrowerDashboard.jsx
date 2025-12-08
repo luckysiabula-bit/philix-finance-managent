@@ -841,15 +841,22 @@ const BorrowerDashboard = ({ useAuth }) => {
       {/* Collateral Modal */}
       {showCollateralModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 md:p-6 z-40 overflow-y-auto">
-          <div className="bg-white rounded-xl md:rounded-2xl shadow-2xl max-w-3xl w-full my-4 md:my-8 min-h-0 flex flex-col max-h-[calc(100vh-2rem)] md:max-h-[calc(100vh-4rem)]">
-            <div className="flex justify-between items-center p-6 md:p-8 pb-4 md:pb-4 flex-shrink-0">
+          <div className="bg-white rounded-xl md:rounded-2xl shadow-2xl max-w-3xl w-full my-4 md:my-8 min-h-0 flex flex-col max-h-[calc(100vh-2rem)] md:max-h-[calc(100vh-4rem)] relative">
+            {/* Close Button - Top Right Corner */}
+            <button 
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 hover:bg-gray-100 text-2xl md:text-3xl font-bold w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center z-10 transition-all" 
+              onClick={()=>setShowCollateralModal(false)}
+            >
+              ✕
+            </button>
+            
+            <div className="flex items-center p-6 md:p-8 pb-4 md:pb-4 flex-shrink-0 pr-16 md:pr-20">
               <div className="flex items-center gap-3 md:gap-4 min-w-0">
                 <div className="bg-purple-600 w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center flex-shrink-0">
                   <span className="text-white text-xl md:text-2xl">📦</span>
                 </div>
                 <h2 className="text-xl md:text-3xl font-bold text-gray-900 truncate">Your Collateral</h2>
               </div>
-              <button className="text-gray-400 hover:text-gray-600 text-2xl md:text-3xl font-bold ml-2 flex-shrink-0" onClick={()=>setShowCollateralModal(false)}>✕</button>
             </div>
             
             <div className="flex-1 overflow-y-auto px-6 md:px-8 pb-6 md:pb-8">
