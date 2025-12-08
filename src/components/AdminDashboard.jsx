@@ -956,6 +956,8 @@ const AdminDashboard = ({ useAuth }) => {
                                   onClick={async () => {
                                     if (window.confirm(`🗑️ Delete this assessed collateral?\n\nType: ${item.collateral_type}\nMarket Value: ZMK ${parseFloat(item.market_value || 0).toLocaleString()}\nAssessed Value: ZMK ${parseFloat(item.assessed_value || 0).toLocaleString()}\n\nThis action cannot be undone.`)) {
                                       try {
+                                        console.log('🔄 Attempting to delete collateral ID:', item.id);
+                                        console.log('🌐 API URL:', API_URL);
                                         await api.deleteCollateral(item.id);
                                         alert('✅ Collateral deleted successfully!');
                                         
@@ -967,7 +969,10 @@ const AdminDashboard = ({ useAuth }) => {
                                           console.log('Reload error (non-critical):', reloadErr);
                                         }
                                       } catch (err) {
-                                        alert('❌ Error deleting collateral: ' + err.message);
+                                        console.error('🚨 Delete error details:', err);
+                                        console.error('🚨 Error name:', err.name);
+                                        console.error('🚨 Error message:', err.message);
+                                        alert('❌ Error deleting collateral: ' + err.message + '\n\nCheck console for details.');
                                       }
                                     }
                                   }}

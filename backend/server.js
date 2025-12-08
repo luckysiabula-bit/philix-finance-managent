@@ -609,7 +609,7 @@ app.post('/api/admin/collateral/:id/assess', authenticateToken, authorize('admin
 
 // Collateral - delete
 app.delete('/api/admin/collateral/:id', authenticateToken, authorize('admin', 'underwriter'), async (req, res) => {
-  const connection = await db.getConnection();
+  const connection = await pool.getConnection();
   try {
     await connection.beginTransaction();
     
