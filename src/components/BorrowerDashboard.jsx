@@ -840,26 +840,22 @@ const BorrowerDashboard = ({ useAuth }) => {
 
       {/* Collateral Modal */}
       {showCollateralModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 md:p-6 z-40 overflow-y-auto">
-          <div className="bg-white rounded-xl md:rounded-2xl shadow-2xl max-w-3xl w-full my-4 md:my-8 min-h-0 flex flex-col max-h-[calc(100vh-2rem)] md:max-h-[calc(100vh-4rem)] relative">
-            {/* Close Button - Top Right Corner */}
-            <button 
-              className="absolute top-3 right-3 md:top-4 md:right-4 text-gray-400 hover:text-gray-600 hover:bg-gray-100 text-xl md:text-2xl font-bold w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center z-10 transition-all" 
-              onClick={()=>setShowCollateralModal(false)}
-            >
-              ✕
-            </button>
-            
-            <div className="flex items-center p-4 md:p-6 pt-4 md:pt-6 pb-4 flex-shrink-0 pr-12 md:pr-16 border-b border-gray-200">
-              <div className="flex items-center gap-3 md:gap-4 min-w-0">
-                <div className="bg-purple-600 w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center flex-shrink-0">
-                  <span className="text-white text-xl md:text-2xl">📦</span>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-40 overflow-y-auto">
+          <div className="bg-white rounded-xl p-6 max-w-4xl w-full my-8 max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-6">
+              <div className="flex items-center gap-3">
+                <div className="bg-purple-600 w-10 h-10 rounded-full flex items-center justify-center">
+                  <span className="text-white text-xl">📦</span>
                 </div>
-                <h2 className="text-xl md:text-3xl font-bold text-gray-900 truncate">Your Collateral</h2>
+                <h2 className="text-2xl font-bold text-gray-800">Your Collateral</h2>
               </div>
+              <button 
+                onClick={() => setShowCollateralModal(false)}
+                className="text-gray-500 hover:text-gray-700 text-2xl"
+              >
+                ×
+              </button>
             </div>
-            
-            <div className="flex-1 overflow-y-auto px-6 md:px-8 py-6 md:py-8">
               <div className="mb-8">
               {/* Pending Collateral Section */}
               {pendingCollateral?.length > 0 && (
@@ -1076,7 +1072,6 @@ const BorrowerDashboard = ({ useAuth }) => {
                   ✅ Add Collateral
                 </button>
               </div>
-            </div>
             </div>
           </div>
         </div>
