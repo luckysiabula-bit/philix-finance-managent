@@ -512,6 +512,62 @@ const BorrowerDashboard = ({ useAuth }) => {
           </div>
         )}
 
+        {/* Collateral Summary - Only show assessed collateral */}
+        {collateral?.filter(item => item.assessed_value).length > 0 && (
+          <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-8 mb-8">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="bg-purple-600 w-12 h-12 rounded-full flex items-center justify-center">
+                <span className="text-white text-2xl">📦</span>
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900">Your Assessed Collateral</h2>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {collateral.filter(item => item.assessed_value).map(item => (
+                <div key={item.id} className="bg-gradient-to-br from-purple-50 to-indigo-50 border-2 border-purple-200 rounded-xl p-4">
+                  <div className="flex items-start justify-between mb-3">
+                    <h3 className="font-bold text-gray-900 text-lg">{item.type}</h3>
+                    <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-bold">
+                      ASSESSED
+                    </span>
+                  </div>
+                  
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-600 font-medium">Your Value:</span>
+                      <span className="text-gray-900 font-bold">ZMK {parseFloat(item.market_value || 0).toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600 font-medium">Assessed Value:</span>
+                      <span className="text-green-700 font-bold">ZMK {parseFloat(item.assessed_value || 0).toLocaleString()}</span>
+                    </div>
+                  </div>
+                  
+                  {item.description && (
+                    <p className="text-gray-600 text-xs mt-3 italic">"{item.description}"</p>
+                  )}
+                  
+                  <div className="mt-3 text-xs text-gray-500">
+                    Assessed: {new Date(item.updated_at || item.created_at).toLocaleDateString()}
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div className="flex items-center gap-2">
+                <div className="bg-blue-500 w-5 h-5 rounded-full flex items-center justify-center">
+                  <span className="text-white text-xs">ℹ</span>
+                </div>
+                <p className="text-blue-800 text-sm font-medium">
+                  These are your collateral items that have been professionally assessed by our team. 
+                  The assessed values can be used as security for your loan applications.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Quick Actions */}
         <div className="bg-white rounded-2xl shadow-xl border border-gray-200 p-8 mb-8">
           <h2 className="text-2xl font-bold text-gray-900 borrower-section-header mb-6">Quick Actions</h2>
