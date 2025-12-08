@@ -551,7 +551,7 @@ app.get('/api/admin/collateral', authenticateToken, authorize('admin', 'underwri
     
     // First, get all collateral without joins to see what exists
     const [allCollateral] = await pool.execute(
-      'SELECT * FROM collateral WHERE deleted_at IS NULL ORDER BY created_at DESC'
+      'SELECT * FROM collateral ORDER BY created_at DESC'
     );
     console.log('📊 Found collateral items:', allCollateral.length);
     
@@ -602,7 +602,7 @@ app.post('/api/admin/collateral/:id/assess', authenticateToken, authorize('admin
       return res.status(400).json({ error: 'assessed_value is required' });
     }
 
-    const [current] = await connection.execute('SELECT * FROM collateral WHERE id = ? AND deleted_at IS NULL FOR UPDATE', [id]);
+    const [current] = await connection.execute('SELECT * FROM collateral WHERE id = ? FOR UPDATE', [id]);
     if (current.length === 0) {
       await connection.rollback();
       connection.release();
@@ -610,7 +610,7 @@ app.post('/api/admin/collateral/:id/assess', authenticateToken, authorize('admin
     }
 
     await connection.execute(
-      'UPDATE collateral SET assessed_value = ?, updated_at = NOW() WHERE id = ? AND deleted_at IS NULL',
+      'UPDATE collateral SET assessed_value = ?, updated_at = NOW() WHERE id = ?',
       [assessed_value, id]
     );
 
@@ -652,26 +652,18 @@ app.delete('/api/admin/collateral/:id', authenticateToken, authorize('admin', 'u
       return res.status(404).json({ error: 'Collateral not found' });
     }
     
-    // Check if collateral table has deleted_at column, if not add it
-    try {
-      await connection.execute('ALTER TABLE collateral ADD COLUMN deleted_at TIMESTAMP NULL');
-      console.log('Added deleted_at column to collateral table');
-    } catch (e) {
-      // Column probably already exists, ignore
-    }
-    
-    // Soft delete - mark as deleted instead of actually deleting
+    // Hard delete the collateral item
     const [result] = await connection.execute(
-      'UPDATE collateral SET deleted_at = NOW(), updated_at = NOW() WHERE id = ? AND deleted_at IS NULL', 
+      'DELETE FROM collateral WHERE id = ?', 
       [id]
     );
     
     if (result.affectedRows === 0) {
-      return res.status(404).json({ error: 'Collateral not found or already deleted' });
+      return res.status(404).json({ error: 'Collateral not found' });
     }
     
     await connection.commit();
-    await auditLog(req.user.id, 'collateral_soft_deleted', 'collateral', id, current[0], { deleted_at: new Date().toISOString() });
+    await auditLog(req.user.id, 'collateral_deleted', 'collateral', id, current[0], { deleted: true });
     res.json({ message: 'Collateral removed from admin view successfully', id: Number(id) });
   } catch (err) {
     try { await connection.rollback(); } catch {}
