@@ -547,15 +547,26 @@ function calculateSchedule(principal, annualRate, termMonths, interestMethod, di
 // Collateral - list all
 app.get('/api/admin/collateral', authenticateToken, authorize('admin', 'underwriter'), async (req, res) => {
   try {
+    console.log('🔍 Admin collateral endpoint called');
+    
+    // First, get all collateral without joins to see what exists
+    const [allCollateral] = await pool.execute(
+      'SELECT * FROM collateral WHERE deleted_at IS NULL ORDER BY created_at DESC'
+    );
+    console.log('📊 Found collateral items:', allCollateral.length);
+    
     const [rows] = await pool.execute(
       `SELECT c.id, c.type, c.description, c.serial_number, c.market_value, c.assessed_value,
-              c.images, c.created_at, b.id as borrower_id, b.full_name, u.email
+              c.images, c.created_at, c.borrower_id,
+              COALESCE(b.full_name, 'Unknown Borrower') as full_name, 
+              COALESCE(u.email, 'Unknown Email') as email
        FROM collateral c
-       JOIN borrowers b ON c.borrower_id = b.id
-       JOIN users u ON b.user_id = u.id
+       LEFT JOIN borrowers b ON c.borrower_id = b.id
+       LEFT JOIN users u ON b.user_id = u.id
        WHERE c.deleted_at IS NULL
        ORDER BY c.created_at DESC`
     );
+    console.log('📋 Returned collateral with details:', rows.length);
     const parseImages = (val) => {
       try {
         if (val == null) return [];
