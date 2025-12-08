@@ -840,19 +840,19 @@ const BorrowerDashboard = ({ useAuth }) => {
 
       {/* Collateral Modal */}
       {showCollateralModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-2 sm:p-4 z-40 overflow-y-auto">
-          <div className="bg-white rounded-xl sm:rounded-2xl shadow-2xl max-w-3xl w-full my-4 sm:my-8 min-h-0 flex flex-col max-h-[calc(100vh-2rem)] sm:max-h-[calc(100vh-4rem)]">
-            <div className="flex justify-between items-center p-4 sm:p-8 pb-3 sm:pb-4 flex-shrink-0">
-              <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-                <div className="bg-purple-600 w-8 h-8 sm:w-12 sm:h-12 rounded-full flex items-center justify-center flex-shrink-0">
-                  <span className="text-white text-lg sm:text-2xl">📦</span>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 md:p-6 z-40 overflow-y-auto">
+          <div className="bg-white rounded-xl md:rounded-2xl shadow-2xl max-w-3xl w-full my-4 md:my-8 min-h-0 flex flex-col max-h-[calc(100vh-2rem)] md:max-h-[calc(100vh-4rem)]">
+            <div className="flex justify-between items-center p-6 md:p-8 pb-4 md:pb-4 flex-shrink-0">
+              <div className="flex items-center gap-3 md:gap-4 min-w-0">
+                <div className="bg-purple-600 w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center flex-shrink-0">
+                  <span className="text-white text-xl md:text-2xl">📦</span>
                 </div>
-                <h2 className="text-xl sm:text-3xl font-bold text-gray-900 truncate">Your Collateral</h2>
+                <h2 className="text-xl md:text-3xl font-bold text-gray-900 truncate">Your Collateral</h2>
               </div>
-              <button className="text-gray-400 hover:text-gray-600 text-2xl sm:text-3xl font-bold ml-2 flex-shrink-0" onClick={()=>setShowCollateralModal(false)}>✕</button>
+              <button className="text-gray-400 hover:text-gray-600 text-2xl md:text-3xl font-bold ml-2 flex-shrink-0" onClick={()=>setShowCollateralModal(false)}>✕</button>
             </div>
             
-            <div className="flex-1 overflow-y-auto px-4 sm:px-8 pb-4 sm:pb-8">
+            <div className="flex-1 overflow-y-auto px-6 md:px-8 pb-6 md:pb-8">
               <div className="mb-8">
               {/* Pending Collateral Section */}
               {pendingCollateral?.length > 0 && (
@@ -871,15 +871,15 @@ const BorrowerDashboard = ({ useAuth }) => {
                     </p>
                   </div>
                   {pendingCollateral.map(item => (
-                    <div key={item.id || item.serial_number} className="bg-gradient-to-r from-orange-50 to-yellow-50 border-2 border-orange-200 rounded-xl p-3 sm:p-4 flex flex-col sm:flex-row justify-between items-start gap-3 sm:gap-0 hover:shadow-md transition">
-                      <div className="flex-1 min-w-0">
-                        <div className="font-bold text-base sm:text-lg text-gray-900 break-words">{item.type}</div>
+                    <div key={item.id || item.serial_number} className="bg-gradient-to-r from-orange-50 to-yellow-50 border-2 border-orange-200 rounded-xl p-4 md:p-5 flex justify-between items-start hover:shadow-md transition">
+                      <div className="flex-1 min-w-0 mr-3">
+                        <div className="font-bold text-base md:text-lg text-gray-900 break-words">{item.type}</div>
                         <div className="text-sm text-gray-700 mt-1 break-words">{item.description}</div>
                         <div className="text-sm text-gray-800 font-semibold mt-2">Your Value: ZMK {Number(item.market_value).toLocaleString()}</div>
                         <div className="text-sm text-orange-700 font-semibold mt-1">⏳ Pending Assessment</div>
                         <div className="text-xs text-gray-500 mt-1">Submitted: {new Date(item.created_at).toLocaleDateString()}</div>
                       </div>
-                      <div className="text-xs text-gray-600 bg-white px-2 sm:px-3 py-1 rounded-full font-medium self-start sm:self-auto flex-shrink-0">{item.serial_number}</div>
+                      <div className="text-xs text-gray-600 bg-white px-3 py-1 rounded-full font-medium flex-shrink-0">{item.serial_number}</div>
                     </div>
                   ))}
                 </div>
@@ -901,15 +901,15 @@ const BorrowerDashboard = ({ useAuth }) => {
                     </p>
                   </div>
                   {collateral.map(item => (
-                    <div key={item.id || item.serial_number} className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-xl p-3 sm:p-4 flex flex-col sm:flex-row justify-between items-start gap-3 sm:gap-0 hover:shadow-md transition">
-                      <div className="flex-1 min-w-0">
-                        <div className="font-bold text-base sm:text-lg text-gray-900 break-words">{item.type}</div>
+                    <div key={item.id || item.serial_number} className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-xl p-4 md:p-5 flex justify-between items-start hover:shadow-md transition">
+                      <div className="flex-1 min-w-0 mr-3">
+                        <div className="font-bold text-base md:text-lg text-gray-900 break-words">{item.type}</div>
                         <div className="text-sm text-gray-700 mt-1 break-words">{item.description}</div>
                         <div className="text-sm text-gray-800 font-semibold mt-2">Your Value: ZMK {Number(item.market_value).toLocaleString()}</div>
                         <div className="text-sm text-green-700 font-semibold">✅ Assessed: ZMK {Number(item.assessed_value).toLocaleString()}</div>
                         <div className="text-xs text-gray-500 mt-1">Assessed: {new Date(item.updated_at || item.created_at).toLocaleDateString()}</div>
                       </div>
-                      <div className="text-xs text-gray-600 bg-white px-2 sm:px-3 py-1 rounded-full font-medium self-start sm:self-auto flex-shrink-0">{item.serial_number}</div>
+                      <div className="text-xs text-gray-600 bg-white px-3 py-1 rounded-full font-medium flex-shrink-0">{item.serial_number}</div>
                     </div>
                   ))}
                 </div>
@@ -928,17 +928,17 @@ const BorrowerDashboard = ({ useAuth }) => {
               )}
             </div>
 
-            <div className="border-t-2 border-gray-200 pt-4 sm:pt-6">
-              <div className="flex items-center gap-2 mb-3 sm:mb-4">
-                <span className="text-xl sm:text-2xl">➕</span>
-                <h3 className="font-bold text-lg sm:text-xl text-gray-900">Add New Collateral</h3>
+            <div className="border-t-2 border-gray-200 pt-6">
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-xl md:text-2xl">➕</span>
+                <h3 className="font-bold text-lg md:text-xl text-gray-900">Add New Collateral</h3>
               </div>
-              <div className="space-y-4 sm:space-y-5">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+              <div className="space-y-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">Type</label>
                     <input 
-                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 text-sm sm:text-base" 
+                      className="w-full px-4 md:px-5 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900" 
                       placeholder="e.g., Vehicle, Land, Equipment" 
                       value={collateralForm.type} 
                       onChange={e=>setCollateralForm(v=>({...v, type:e.target.value}))} 
@@ -947,16 +947,16 @@ const BorrowerDashboard = ({ useAuth }) => {
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">Serial/ID Number</label>
                     <input 
-                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 text-sm sm:text-base" 
+                      className="w-full px-4 md:px-5 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900" 
                       placeholder="Serial or ID number" 
                       value={collateralForm.serial_number} 
                       onChange={e=>setCollateralForm(v=>({...v, serial_number:e.target.value}))} 
                     />
                   </div>
-                  <div className="sm:col-span-2">
+                  <div className="md:col-span-2">
                     <label className="block text-sm font-semibold text-gray-700 mb-2">Description</label>
                     <input 
-                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 text-sm sm:text-base" 
+                      className="w-full px-4 md:px-5 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900" 
                       placeholder="Brief description of the collateral" 
                       value={collateralForm.description} 
                       onChange={e=>setCollateralForm(v=>({...v, description:e.target.value}))} 
@@ -965,7 +965,7 @@ const BorrowerDashboard = ({ useAuth }) => {
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">Market Value (ZMK)</label>
                     <input 
-                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 text-sm sm:text-base" 
+                      className="w-full px-4 md:px-5 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900" 
                       placeholder="Market value in Kwacha" 
                       type="number" 
                       value={collateralForm.market_value} 
@@ -975,25 +975,25 @@ const BorrowerDashboard = ({ useAuth }) => {
                 </div>
 
                 {/* Image Upload Section */}
-                <div className="border-2 border-dashed border-purple-300 rounded-xl p-3 sm:p-5 bg-purple-50">
+                <div className="border-2 border-dashed border-purple-300 rounded-xl p-4 md:p-5 bg-purple-50">
                   <h4 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
-                    <span className="text-lg sm:text-xl">📸</span>
-                    <span className="text-sm sm:text-base">Upload Collateral Photos</span>
+                    <span className="text-xl">📸</span>
+                    <span>Upload Collateral Photos</span>
                   </h4>
                   
                   {/* Image Preview Grid */}
                   {collateralForm.images.length > 0 && (
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3 mb-3 sm:mb-4">
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-4">
                       {collateralForm.images.map((img, idx) => (
                         <div key={idx} className="relative">
-                          <img src={img} alt={`Preview ${idx + 1}`} className="w-full h-20 sm:h-28 object-cover rounded-lg border-2 border-purple-300" />
+                          <img src={img} alt={`Preview ${idx + 1}`} className="w-full h-24 md:h-28 object-cover rounded-lg border-2 border-purple-300" />
                           <button
                             type="button"
                             onClick={() => setCollateralForm(v => ({
                               ...v,
                               images: v.images.filter((_, i) => i !== idx)
                             }))}
-                            className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center text-xs sm:text-sm hover:bg-red-600 font-bold shadow-lg"
+                            className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-7 h-7 flex items-center justify-center text-sm hover:bg-red-600 font-bold shadow-lg"
                           >
                             ×
                           </button>
@@ -1003,8 +1003,8 @@ const BorrowerDashboard = ({ useAuth }) => {
                   )}
 
                   {/* Upload Buttons */}
-                  <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
-                    <label className="flex-1 bg-blue-600 text-white px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg hover:bg-blue-700 cursor-pointer text-center font-semibold transition shadow-md text-sm sm:text-base">
+                  <div className="flex gap-3">
+                    <label className="flex-1 bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 cursor-pointer text-center font-semibold transition shadow-md">
                       <input
                         type="file"
                         accept="image/*"
@@ -1024,7 +1024,7 @@ const BorrowerDashboard = ({ useAuth }) => {
                           });
                         }}
                       />
-                      📁 <span className="hidden sm:inline">Upload from Device</span><span className="sm:hidden">Upload</span>
+                      📁 Upload from Device
                     </label>
                     <button
                       type="button"
@@ -1042,9 +1042,9 @@ const BorrowerDashboard = ({ useAuth }) => {
                           alert('Camera access denied or not available');
                         }
                       }}
-                      className="flex-1 bg-green-600 text-white px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg hover:bg-green-700 font-semibold transition shadow-md text-sm sm:text-base"
+                      className="flex-1 bg-green-600 text-white px-4 py-3 rounded-lg hover:bg-green-700 font-semibold transition shadow-md"
                     >
-                      📷 <span className="hidden sm:inline">Take Photo</span><span className="sm:hidden">Camera</span>
+                      📷 Take Photo
                     </button>
                   </div>
                   <p className="text-sm text-gray-700 font-medium mt-3 text-center">
@@ -1053,7 +1053,7 @@ const BorrowerDashboard = ({ useAuth }) => {
                 </div>
 
                 <button
-                  className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold text-base sm:text-lg px-4 sm:px-6 py-3 sm:py-4 rounded-lg transition shadow-xl"
+                  className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold text-lg px-6 py-4 rounded-lg transition shadow-xl"
                   onClick={async()=>{
                     try{
                       const payload={...collateralForm, market_value:Number(collateralForm.market_value||0)};
@@ -1066,7 +1066,7 @@ const BorrowerDashboard = ({ useAuth }) => {
                     }
                   }}
                 >
-                  ✅ <span className="hidden sm:inline">Add Collateral</span><span className="sm:hidden">Add</span>
+                  ✅ Add Collateral
                 </button>
               </div>
             </div>
