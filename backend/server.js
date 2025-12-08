@@ -534,6 +534,7 @@ app.get('/api/admin/collateral', authenticateToken, authorize('admin', 'underwri
        FROM collateral c
        JOIN borrowers b ON c.borrower_id = b.id
        JOIN users u ON b.user_id = u.id
+       WHERE c.deleted_at IS NULL
        ORDER BY c.created_at DESC`
     );
     const parseImages = (val) => {
@@ -572,15 +573,15 @@ app.post('/api/admin/collateral/:id/assess', authenticateToken, authorize('admin
       return res.status(400).json({ error: 'assessed_value is required' });
     }
 
-    const [current] = await connection.execute('SELECT * FROM collateral WHERE id = ? FOR UPDATE', [id]);
+    const [current] = await connection.execute('SELECT * FROM collateral WHERE id = ? AND deleted_at IS NULL FOR UPDATE', [id]);
     if (current.length === 0) {
       await connection.rollback();
       connection.release();
-      return res.status(404).json({ error: 'Collateral not found' });
+      return res.status(404).json({ error: 'Collateral not found or has been deleted' });
     }
 
     await connection.execute(
-      'UPDATE collateral SET assessed_value = ?, updated_at = NOW() WHERE id = ?',
+      'UPDATE collateral SET assessed_value = ?, updated_at = NOW() WHERE id = ? AND deleted_at IS NULL',
       [assessed_value, id]
     );
 
@@ -607,7 +608,7 @@ app.post('/api/admin/collateral/:id/assess', authenticateToken, authorize('admin
   }
 });
 
-// Collateral - delete
+// Collateral - delete (soft delete - hide from admin but keep for borrower)
 app.delete('/api/admin/collateral/:id', authenticateToken, authorize('admin', 'underwriter'), async (req, res) => {
   const connection = await pool.getConnection();
   try {
@@ -622,26 +623,30 @@ app.delete('/api/admin/collateral/:id', authenticateToken, authorize('admin', 'u
       return res.status(404).json({ error: 'Collateral not found' });
     }
     
-    // Delete related assessments first (if table exists)
+    // Check if collateral table has deleted_at column, if not add it
     try {
-      await connection.execute('DELETE FROM collateral_assessments WHERE collateral_id = ?', [id]);
+      await connection.execute('ALTER TABLE collateral ADD COLUMN deleted_at TIMESTAMP NULL');
+      console.log('Added deleted_at column to collateral table');
     } catch (e) {
-      // table may not exist; ignore
+      // Column probably already exists, ignore
     }
     
-    // Delete the collateral record
-    const [result] = await connection.execute('DELETE FROM collateral WHERE id = ?', [id]);
+    // Soft delete - mark as deleted instead of actually deleting
+    const [result] = await connection.execute(
+      'UPDATE collateral SET deleted_at = NOW(), updated_at = NOW() WHERE id = ? AND deleted_at IS NULL', 
+      [id]
+    );
     
     if (result.affectedRows === 0) {
-      return res.status(404).json({ error: 'Collateral not found' });
+      return res.status(404).json({ error: 'Collateral not found or already deleted' });
     }
     
     await connection.commit();
-    await auditLog(req.user.id, 'collateral_deleted', 'collateral', id, current[0], {});
-    res.json({ message: 'Collateral deleted successfully', id: Number(id) });
+    await auditLog(req.user.id, 'collateral_soft_deleted', 'collateral', id, current[0], { deleted_at: new Date().toISOString() });
+    res.json({ message: 'Collateral removed from admin view successfully', id: Number(id) });
   } catch (err) {
     try { await connection.rollback(); } catch {}
-    console.error('Error deleting collateral:', err);
+    console.error('Error soft deleting collateral:', err);
     res.status(500).json({ error: 'Server error' });
   } finally {
     connection.release();

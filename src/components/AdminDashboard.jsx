@@ -954,12 +954,12 @@ const AdminDashboard = ({ useAuth }) => {
                               {item.assessed_value && (
                                 <button
                                   onClick={async () => {
-                                    if (window.confirm(`🗑️ Delete this assessed collateral?\n\nType: ${item.collateral_type}\nMarket Value: ZMK ${parseFloat(item.market_value || 0).toLocaleString()}\nAssessed Value: ZMK ${parseFloat(item.assessed_value || 0).toLocaleString()}\n\nThis action cannot be undone.`)) {
+                                    if (window.confirm(`🗑️ Remove this collateral from admin view?\n\nType: ${item.collateral_type}\nMarket Value: ZMK ${parseFloat(item.market_value || 0).toLocaleString()}\nAssessed Value: ZMK ${parseFloat(item.assessed_value || 0).toLocaleString()}\n\nNote: This will hide the collateral from admin dashboard but borrower can still view it.`)) {
                                       try {
                                         console.log('🔄 Attempting to delete collateral ID:', item.id);
                                         console.log('🌐 API URL:', API_URL);
                                         await api.deleteCollateral(item.id);
-                                        alert('✅ Collateral deleted successfully!');
+                                        alert('✅ Collateral removed from admin view successfully!\n\nBorrower can still view this collateral in their dashboard.');
                                         
                                         // Reload collateral data
                                         try {
