@@ -959,7 +959,7 @@ const AdminDashboard = ({ useAuth }) => {
                                         console.log('🔄 Attempting to delete collateral ID:', item.id);
                                         console.log('🌐 API URL:', API_URL);
                                         await api.deleteCollateral(item.id);
-                                        alert('✅ Collateral deleted successfully!\n\nNote: Even the borrowers dashboard wont view it.');
+                                        alert('✅ Collateral deleted successfully!\n\nThis collateral has been permanently removed from the entire system. Neither admin nor borrower will be able to view it.');
                                         
                                         // Reload collateral data
                                         try {
