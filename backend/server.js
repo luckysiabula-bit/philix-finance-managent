@@ -607,6 +607,47 @@ app.post('/api/admin/collateral/:id/assess', authenticateToken, authorize('admin
   }
 });
 
+// Collateral - delete
+app.delete('/api/admin/collateral/:id', authenticateToken, authorize('admin', 'underwriter'), async (req, res) => {
+  const connection = await db.getConnection();
+  try {
+    await connection.beginTransaction();
+    
+    const { id } = req.params;
+    
+    // Get current collateral data for audit log
+    const [current] = await connection.execute('SELECT * FROM collateral WHERE id = ? FOR UPDATE', [id]);
+    
+    if (!current.length) {
+      return res.status(404).json({ error: 'Collateral not found' });
+    }
+    
+    // Delete related assessments first (if table exists)
+    try {
+      await connection.execute('DELETE FROM collateral_assessments WHERE collateral_id = ?', [id]);
+    } catch (e) {
+      // table may not exist; ignore
+    }
+    
+    // Delete the collateral record
+    const [result] = await connection.execute('DELETE FROM collateral WHERE id = ?', [id]);
+    
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Collateral not found' });
+    }
+    
+    await connection.commit();
+    await auditLog(req.user.id, 'collateral_deleted', 'collateral', id, current[0], {});
+    res.json({ message: 'Collateral deleted successfully', id: Number(id) });
+  } catch (err) {
+    try { await connection.rollback(); } catch {}
+    console.error('Error deleting collateral:', err);
+    res.status(500).json({ error: 'Server error' });
+  } finally {
+    connection.release();
+  }
+});
+
 app.get('/api/admin/applications', authenticateToken, authorize('admin', 'underwriter'), async (req, res) => {
   try {
     const [applications] = await pool.execute(

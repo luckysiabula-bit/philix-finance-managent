@@ -82,6 +82,9 @@ const api = {
     method: 'POST',
     body: JSON.stringify(adminData),
   }),
+  deleteCollateral: (id) => api.request(`/admin/collateral/${id}`, {
+    method: 'DELETE',
+  }),
 };
 
 // CollateralAssessment Component
@@ -321,7 +324,7 @@ const AdminDashboard = ({ useAuth }) => {
                   : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
               }`}
             >
-              📦 Collateral {adminCollateral?.filter(c => c.status === 'pending').length > 0 && `(${adminCollateral.filter(c => c.status === 'pending').length})`}
+              📦 Collateral {adminCollateral?.filter(c => !c.assessed_value).length > 0 && `(${adminCollateral.filter(c => !c.assessed_value).length})`}
             </button>
           </div>
         </div>
@@ -937,15 +940,43 @@ const AdminDashboard = ({ useAuth }) => {
                               <span className="text-sm font-semibold text-gray-600">Market Value:</span>
                               <span className="ml-2 font-bold text-green-600">ZMK {parseFloat(item.market_value || 0).toLocaleString()}</span>
                             </div>
-                            <div>
-                              <span className="text-sm font-semibold text-gray-600">Status:</span>
-                              <span className={`ml-2 px-2 py-1 rounded text-xs font-bold ${
-                                item.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                                item.status === 'approved' ? 'bg-green-100 text-green-800' :
-                                'bg-red-100 text-red-800'
-                              }`}>
-                                {item.status?.toUpperCase()}
-                              </span>
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <span className="text-sm font-semibold text-gray-600">Status:</span>
+                                <span className={`ml-2 px-2 py-1 rounded text-xs font-bold ${
+                                  item.assessed_value ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                                }`}>
+                                  {item.assessed_value ? 'ASSESSED' : 'PENDING'}
+                                </span>
+                              </div>
+                              
+                              {/* Delete button for assessed collateral */}
+                              {item.assessed_value && (
+                                <button
+                                  onClick={async () => {
+                                    if (window.confirm(`🗑️ Delete this assessed collateral?\n\nType: ${item.collateral_type}\nMarket Value: ZMK ${parseFloat(item.market_value || 0).toLocaleString()}\nAssessed Value: ZMK ${parseFloat(item.assessed_value || 0).toLocaleString()}\n\nThis action cannot be undone.`)) {
+                                      try {
+                                        await api.deleteCollateral(item.id);
+                                        alert('✅ Collateral deleted successfully!');
+                                        
+                                        // Reload collateral data
+                                        try {
+                                          const colData = await api.getAllCollateral();
+                                          setAdminCollateral(Array.isArray(colData) ? colData : []);
+                                        } catch (reloadErr) {
+                                          console.log('Reload error (non-critical):', reloadErr);
+                                        }
+                                      } catch (err) {
+                                        alert('❌ Error deleting collateral: ' + err.message);
+                                      }
+                                    }
+                                  }}
+                                  className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm font-semibold transition-colors duration-200 flex items-center gap-1"
+                                  title="Delete assessed collateral"
+                                >
+                                  🗑️ Delete
+                                </button>
+                              )}
                             </div>
                           </div>
                         </div>
