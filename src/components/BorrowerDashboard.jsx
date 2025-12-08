@@ -70,6 +70,7 @@ const api = {
 
   getDashboard: () => api.request('/borrower/dashboard'),
   getBorrowerCollateral: () => api.request('/borrower/collateral'),
+  getPendingCollateral: () => api.request('/borrower/collateral/pending'),
   addBorrowerCollateral: (item) => api.request('/borrower/collateral', {
     method: 'POST',
     body: JSON.stringify(item),
@@ -88,6 +89,7 @@ const api = {
 const BorrowerDashboard = ({ useAuth }) => {
   const [dashboard, setDashboard] = useState(null);
   const [collateral, setCollateral] = useState([]);
+  const [pendingCollateral, setPendingCollateral] = useState([]);
   const [showApplyModal, setShowApplyModal] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showCollateralModal, setShowCollateralModal] = useState(false);
@@ -208,8 +210,12 @@ const BorrowerDashboard = ({ useAuth }) => {
 
   const loadCollateral = async () => {
     try {
-      const items = await api.getBorrowerCollateral();
-      setCollateral(Array.isArray(items) ? items : []);
+      const [assessedItems, pendingItems] = await Promise.all([
+        api.getBorrowerCollateral(),
+        api.getPendingCollateral()
+      ]);
+      setCollateral(Array.isArray(assessedItems) ? assessedItems : []);
+      setPendingCollateral(Array.isArray(pendingItems) ? pendingItems : []);
     } catch (err) {
       console.error('Failed to load collateral', err);
     }
@@ -847,28 +853,76 @@ const BorrowerDashboard = ({ useAuth }) => {
             </div>
 
             <div className="mb-8">
-              {collateral?.length ? (
-                <div className="space-y-3">
-                  <h3 className="text-lg font-bold text-gray-900 mb-3">📋 Your Collateral Items</h3>
-                  {collateral.map(item => (
-                    <div key={item.id || item.serial_number} className="bg-gradient-to-r from-indigo-50 to-purple-50 border-2 border-indigo-200 rounded-xl p-4 flex justify-between items-start hover:shadow-md transition">
+              {/* Pending Collateral Section */}
+              {pendingCollateral?.length > 0 && (
+                <div className="space-y-3 mb-6">
+                  <h3 className="text-lg font-bold text-orange-900 mb-3">⏳ Pending Assessment ({pendingCollateral.length})</h3>
+                  <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="bg-orange-500 w-5 h-5 rounded-full flex items-center justify-center">
+                        <span className="text-white text-xs">ⓘ</span>
+                      </div>
+                      <p className="text-orange-800 text-sm font-bold">Awaiting Admin Review</p>
+                    </div>
+                    <p className="text-orange-700 text-sm">
+                      The items below have been submitted and are waiting for professional assessment by our team. 
+                      Once assessed, they will appear in your approved collateral section and can be used for loan applications.
+                    </p>
+                  </div>
+                  {pendingCollateral.map(item => (
+                    <div key={item.id || item.serial_number} className="bg-gradient-to-r from-orange-50 to-yellow-50 border-2 border-orange-200 rounded-xl p-4 flex justify-between items-start hover:shadow-md transition">
                       <div>
                         <div className="font-bold text-lg text-gray-900">{item.type}</div>
                         <div className="text-sm text-gray-700 mt-1">{item.description}</div>
-                        <div className="text-sm text-gray-800 font-semibold mt-2">Market Value: ZMK {Number(item.market_value).toLocaleString()}</div>
-                        {item.assessed_value && (
-                          <div className="text-sm text-green-700 font-semibold">✅ Assessed: ZMK {Number(item.assessed_value).toLocaleString()}</div>
-                        )}
+                        <div className="text-sm text-gray-800 font-semibold mt-2">Your Value: ZMK {Number(item.market_value).toLocaleString()}</div>
+                        <div className="text-sm text-orange-700 font-semibold mt-1">⏳ Pending Assessment</div>
+                        <div className="text-xs text-gray-500 mt-1">Submitted: {new Date(item.created_at).toLocaleDateString()}</div>
                       </div>
                       <div className="text-xs text-gray-600 bg-white px-3 py-1 rounded-full font-medium">{item.serial_number}</div>
                     </div>
                   ))}
                 </div>
-              ) : (
+              )}
+
+              {/* Assessed Collateral Section */}
+              {collateral?.length > 0 ? (
+                <div className="space-y-3">
+                  <h3 className="text-lg font-bold text-green-900 mb-3">✅ Assessed Collateral ({collateral.length})</h3>
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="bg-green-500 w-5 h-5 rounded-full flex items-center justify-center">
+                        <span className="text-white text-xs">✓</span>
+                      </div>
+                      <p className="text-green-800 text-sm font-bold">Approved & Ready for Use</p>
+                    </div>
+                    <p className="text-green-700 text-sm">
+                      These items have been professionally assessed and can be used as security for your loan applications.
+                    </p>
+                  </div>
+                  {collateral.map(item => (
+                    <div key={item.id || item.serial_number} className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-xl p-4 flex justify-between items-start hover:shadow-md transition">
+                      <div>
+                        <div className="font-bold text-lg text-gray-900">{item.type}</div>
+                        <div className="text-sm text-gray-700 mt-1">{item.description}</div>
+                        <div className="text-sm text-gray-800 font-semibold mt-2">Your Value: ZMK {Number(item.market_value).toLocaleString()}</div>
+                        <div className="text-sm text-green-700 font-semibold">✅ Assessed: ZMK {Number(item.assessed_value).toLocaleString()}</div>
+                        <div className="text-xs text-gray-500 mt-1">Assessed: {new Date(item.updated_at || item.created_at).toLocaleDateString()}</div>
+                      </div>
+                      <div className="text-xs text-gray-600 bg-white px-3 py-1 rounded-full font-medium">{item.serial_number}</div>
+                    </div>
+                  ))}
+                </div>
+              ) : pendingCollateral?.length === 0 ? (
                 <div className="text-center py-8 bg-gray-50 rounded-xl">
                   <div className="text-5xl mb-3">📦</div>
                   <p className="text-gray-600 text-lg">No collateral added yet.</p>
                   <p className="text-gray-500 text-sm mt-1">Add your first collateral item below</p>
+                </div>
+              ) : (
+                <div className="text-center py-8 bg-blue-50 rounded-xl border border-blue-200">
+                  <div className="text-5xl mb-3">⏳</div>
+                  <p className="text-blue-800 text-lg font-bold">Assessment in Progress</p>
+                  <p className="text-blue-600 text-sm mt-1">Your collateral is being reviewed by our team</p>
                 </div>
               )}
             </div>

@@ -299,7 +299,7 @@ app.post('/api/auth/login', async (req, res) => {
 // ============================================
 // BORROWER ROUTES
 // ============================================
-// Collateral - list
+// Collateral - list (only show assessed collateral to borrowers)
 app.get('/api/borrower/collateral', authenticateToken, authorize('borrower'), async (req, res) => {
   try {
     const [borrower] = await pool.execute('SELECT id FROM borrowers WHERE user_id = ?', [req.user.id]);
@@ -307,7 +307,7 @@ app.get('/api/borrower/collateral', authenticateToken, authorize('borrower'), as
     const borrowerId = borrower[0].id;
     const [rows] = await pool.execute(
       `SELECT id, type, description, serial_number, market_value, assessed_value, images, created_at, updated_at
-       FROM collateral WHERE borrower_id = ? ORDER BY created_at DESC`,
+       FROM collateral WHERE borrower_id = ? AND assessed_value IS NOT NULL AND deleted_at IS NULL ORDER BY created_at DESC`,
       [borrowerId]
     );
 
@@ -330,6 +330,25 @@ app.get('/api/borrower/collateral', authenticateToken, authorize('borrower'), as
     }));
     
     res.json(collateralWithImages);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// Collateral - list pending (for borrowers to see their submitted but unassessed items)
+app.get('/api/borrower/collateral/pending', authenticateToken, authorize('borrower'), async (req, res) => {
+  try {
+    const [borrower] = await pool.execute('SELECT id FROM borrowers WHERE user_id = ?', [req.user.id]);
+    if (borrower.length === 0) return res.status(404).json({ error: 'Borrower profile not found' });
+    const borrowerId = borrower[0].id;
+    const [rows] = await pool.execute(
+      `SELECT id, type, description, serial_number, market_value, created_at
+       FROM collateral WHERE borrower_id = ? AND assessed_value IS NULL AND deleted_at IS NULL ORDER BY created_at DESC`,
+      [borrowerId]
+    );
+    
+    res.json(rows);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Server error' });
