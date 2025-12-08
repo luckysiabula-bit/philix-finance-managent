@@ -840,9 +840,9 @@ const BorrowerDashboard = ({ useAuth }) => {
 
       {/* Collateral Modal */}
       {showCollateralModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-40">
-          <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-3xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-center mb-6">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-40 overflow-y-auto">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full my-8 min-h-0 flex flex-col max-h-[calc(100vh-4rem)]">
+            <div className="flex justify-between items-center p-8 pb-4 flex-shrink-0">
               <div className="flex items-center gap-3">
                 <div className="bg-purple-600 w-12 h-12 rounded-full flex items-center justify-center">
                   <span className="text-white text-2xl">📦</span>
@@ -851,8 +851,9 @@ const BorrowerDashboard = ({ useAuth }) => {
               </div>
               <button className="text-gray-400 hover:text-gray-600 text-3xl font-bold" onClick={()=>setShowCollateralModal(false)}>✕</button>
             </div>
-
-            <div className="mb-8">
+            
+            <div className="flex-1 overflow-y-auto px-8 pb-8">
+              <div className="mb-8">
               {/* Pending Collateral Section */}
               {pendingCollateral?.length > 0 && (
                 <div className="space-y-3 mb-6">
@@ -1068,6 +1069,7 @@ const BorrowerDashboard = ({ useAuth }) => {
                   ✅ Add Collateral
                 </button>
               </div>
+            </div>
             </div>
           </div>
         </div>
