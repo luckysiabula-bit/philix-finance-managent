@@ -306,8 +306,7 @@ app.get('/api/borrower/collateral', authenticateToken, authorize('borrower'), as
     if (borrower.length === 0) return res.status(404).json({ error: 'Borrower profile not found' });
     const borrowerId = borrower[0].id;
     const [rows] = await pool.execute(
-      `SELECT id, type, description, serial_number, market_value, assessed_value, images, created_at, updated_at,
-              admin_deleted, admin_deleted_at
+      `SELECT id, type, description, serial_number, market_value, assessed_value, images, created_at, updated_at
        FROM collateral WHERE borrower_id = ? AND assessed_value IS NOT NULL ORDER BY created_at DESC`,
       [borrowerId]
     );
@@ -344,8 +343,7 @@ app.get('/api/borrower/collateral/pending', authenticateToken, authorize('borrow
     if (borrower.length === 0) return res.status(404).json({ error: 'Borrower profile not found' });
     const borrowerId = borrower[0].id;
     const [rows] = await pool.execute(
-      `SELECT id, type, description, serial_number, market_value, created_at,
-              admin_deleted, admin_deleted_at
+      `SELECT id, type, description, serial_number, market_value, created_at
        FROM collateral WHERE borrower_id = ? AND assessed_value IS NULL ORDER BY created_at DESC`,
       [borrowerId]
     );
@@ -551,11 +549,11 @@ app.get('/api/admin/collateral', authenticateToken, authorize('admin', 'underwri
   try {
     console.log('🔍 Admin collateral endpoint called');
     
-    // First, get all collateral without joins to see what exists (excluding admin-deleted)
+    // First, get all collateral without joins to see what exists
     const [allCollateral] = await pool.execute(
-      'SELECT * FROM collateral WHERE (admin_deleted IS NULL OR admin_deleted = 0) ORDER BY created_at DESC'
+      'SELECT * FROM collateral ORDER BY created_at DESC'
     );
-    console.log('📊 Found collateral items (excluding admin-deleted):', allCollateral.length);
+    console.log('📊 Found collateral items:', allCollateral.length);
     
     const [rows] = await pool.execute(
       `SELECT c.id, c.type, c.description, c.serial_number, c.market_value, c.assessed_value,
@@ -565,7 +563,6 @@ app.get('/api/admin/collateral', authenticateToken, authorize('admin', 'underwri
        FROM collateral c
        LEFT JOIN borrowers b ON c.borrower_id = b.id
        LEFT JOIN users u ON b.user_id = u.id
-       WHERE (c.admin_deleted IS NULL OR c.admin_deleted = 0)
        ORDER BY c.created_at DESC`
     );
     console.log('📋 Returned collateral with details:', rows.length);
@@ -655,9 +652,9 @@ app.delete('/api/admin/collateral/:id', authenticateToken, authorize('admin', 'u
       return res.status(404).json({ error: 'Collateral not found' });
     }
     
-    // Soft delete - hide from admin view but keep visible to borrowers
+    // Hard delete the collateral item
     const [result] = await connection.execute(
-      'UPDATE collateral SET admin_deleted = 1, admin_deleted_at = NOW(), updated_at = NOW() WHERE id = ?', 
+      'DELETE FROM collateral WHERE id = ?', 
       [id]
     );
     
@@ -666,7 +663,7 @@ app.delete('/api/admin/collateral/:id', authenticateToken, authorize('admin', 'u
     }
     
     await connection.commit();
-    await auditLog(req.user.id, 'collateral_admin_removed', 'collateral', id, current[0], { admin_deleted: true });
+    await auditLog(req.user.id, 'collateral_deleted', 'collateral', id, current[0], { deleted: true });
     res.json({ message: 'Collateral removed from admin view successfully', id: Number(id) });
   } catch (err) {
     try { await connection.rollback(); } catch {}
