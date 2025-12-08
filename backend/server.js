@@ -307,7 +307,7 @@ app.get('/api/borrower/collateral', authenticateToken, authorize('borrower'), as
     const borrowerId = borrower[0].id;
     const [rows] = await pool.execute(
       `SELECT id, type, description, serial_number, market_value, assessed_value, images, created_at, updated_at
-       FROM collateral WHERE borrower_id = ? AND assessed_value IS NOT NULL AND deleted_at IS NULL ORDER BY created_at DESC`,
+       FROM collateral WHERE borrower_id = ? AND assessed_value IS NOT NULL ORDER BY created_at DESC`,
       [borrowerId]
     );
 
@@ -344,7 +344,7 @@ app.get('/api/borrower/collateral/pending', authenticateToken, authorize('borrow
     const borrowerId = borrower[0].id;
     const [rows] = await pool.execute(
       `SELECT id, type, description, serial_number, market_value, created_at
-       FROM collateral WHERE borrower_id = ? AND assessed_value IS NULL AND deleted_at IS NULL ORDER BY created_at DESC`,
+       FROM collateral WHERE borrower_id = ? AND assessed_value IS NULL ORDER BY created_at DESC`,
       [borrowerId]
     );
     
@@ -563,7 +563,6 @@ app.get('/api/admin/collateral', authenticateToken, authorize('admin', 'underwri
        FROM collateral c
        LEFT JOIN borrowers b ON c.borrower_id = b.id
        LEFT JOIN users u ON b.user_id = u.id
-       WHERE c.deleted_at IS NULL
        ORDER BY c.created_at DESC`
     );
     console.log('📋 Returned collateral with details:', rows.length);
