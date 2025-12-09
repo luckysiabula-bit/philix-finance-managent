@@ -400,8 +400,9 @@ app.get('/api/borrower/dashboard', authenticateToken, authorize('borrower'), asy
 
     // Get active loans
     const [loans] = await pool.execute(
-      `SELECT l.id, l.principal_amount, l.outstanding_balance, l.status, 
-              l.disbursement_date, p.name as product_name
+      `SELECT l.id, l.principal_amount, l.outstanding_balance, l.interest_rate, 
+              l.term_months, l.status, l.disbursement_date, l.application_id,
+              p.name as product_name
        FROM loans l
        JOIN loan_products p ON l.loan_product_id = p.id
        WHERE l.borrower_id = ? AND l.status = 'active'`,
@@ -789,7 +790,7 @@ app.put('/api/admin/applications/:id/review', authenticateToken, authorize('admi
         const weeksToAdd = app.term_months;
         maturityDate.setDate(maturityDate.getDate() + (weeksToAdd * 7));
 
-        // Create active loan
+        // Create active loan (initially with principal as outstanding, will be updated after calculating interest)
         const [loanResult] = await connection.execute(
           `INSERT INTO loans 
            (application_id, borrower_id, loan_product_id, principal_amount, interest_rate, 
@@ -818,6 +819,21 @@ app.put('/api/admin/applications/:id/review', authenticateToken, authorize('admi
         const weeklyPayment = totalAmount / weeks;
         const principalPerWeek = principal / weeks;
         const interestPerWeek = totalInterest / weeks;
+
+        console.log('💰 Loan Calculation:', {
+          principal,
+          weeks,
+          interestRate: interestRate + '%',
+          totalInterest,
+          totalAmount,
+          weeklyPayment
+        });
+
+        // Update the loan's outstanding balance to be the TOTAL amount (principal + interest)
+        await connection.execute(
+          `UPDATE loans SET outstanding_balance = ?, interest_rate = ? WHERE id = ?`,
+          [totalAmount.toFixed(2), interestRate, loanId]
+        );
 
         // Create weekly installments
         for (let i = 1; i <= weeks; i++) {

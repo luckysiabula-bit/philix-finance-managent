@@ -533,8 +533,27 @@ const AdminDashboard = ({ useAuth }) => {
                         )}
                       </td>
                       <td className="py-4 px-4">
-                        <div className="font-bold text-gray-900">ZMK {parseFloat(app.requested_amount).toLocaleString()}</div>
-                        <div className="text-xs text-gray-700 font-medium">{app.term_months} week{app.term_months > 1 ? 's' : ''}</div>
+                        {(() => {
+                          const principal = parseFloat(app.requested_amount);
+                          const weeks = app.term_months;
+                          let interestRate = 0;
+                          if (weeks === 1) interestRate = 13;
+                          else if (weeks === 2) interestRate = 20;
+                          else if (weeks === 3) interestRate = 30;
+                          else if (weeks === 4) interestRate = 35;
+                          else interestRate = (weeks / 4) * 35;
+                          
+                          const interest = principal * (interestRate / 100);
+                          const totalRepayment = principal + interest;
+
+                          return (
+                            <div>
+                              <div className="font-bold text-gray-900">ZMK {totalRepayment.toLocaleString()}</div>
+                              <div className="text-xs text-gray-600">Principal: ZMK {principal.toLocaleString()}</div>
+                              <div className="text-xs text-gray-700 font-medium">{weeks} week{weeks > 1 ? 's' : ''} @ {interestRate.toFixed(1)}%</div>
+                            </div>
+                          );
+                        })()}
                       </td>
                       <td className="py-4 px-4">
                         <div className="text-sm text-gray-700 font-medium max-w-xs truncate">{app.purpose}</div>
@@ -759,7 +778,7 @@ const AdminDashboard = ({ useAuth }) => {
                         {/* Amount & Term */}
                         <div className="grid grid-cols-2 gap-3 mb-3">
                           <div>
-                            <p className="text-xs text-gray-600 font-medium mb-1">Amount</p>
+                            <p className="text-xs text-gray-600 font-medium mb-1">Principal Amount</p>
                             <p className="font-bold text-gray-900">ZMK {parseFloat(app.requested_amount).toLocaleString()}</p>
                           </div>
                           <div>
@@ -767,6 +786,46 @@ const AdminDashboard = ({ useAuth }) => {
                             <p className="font-bold text-gray-900">{app.term_months} week{app.term_months > 1 ? 's' : ''}</p>
                           </div>
                         </div>
+
+                        {/* Loan Calculation Summary */}
+                        {(() => {
+                          const principal = parseFloat(app.requested_amount);
+                          const weeks = app.term_months;
+                          let interestRate = 0;
+                          if (weeks === 1) interestRate = 13;
+                          else if (weeks === 2) interestRate = 20;
+                          else if (weeks === 3) interestRate = 30;
+                          else if (weeks === 4) interestRate = 35;
+                          else interestRate = (weeks / 4) * 35;
+                          
+                          const interest = principal * (interestRate / 100);
+                          const totalRepayment = principal + interest;
+                          const weeklyPayment = totalRepayment / weeks;
+
+                          return (
+                            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-3">
+                              <p className="text-xs font-bold text-blue-900 mb-2">💰 Loan Summary</p>
+                              <div className="space-y-1 text-xs">
+                                <div className="flex justify-between">
+                                  <span className="text-gray-700">Interest Rate:</span>
+                                  <span className="font-bold text-blue-900">{interestRate.toFixed(1)}%</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-gray-700">Total Interest:</span>
+                                  <span className="font-bold text-blue-900">ZMK {interest.toLocaleString()}</span>
+                                </div>
+                                <div className="flex justify-between border-t border-blue-200 pt-1">
+                                  <span className="text-gray-700 font-semibold">Total Repayment:</span>
+                                  <span className="font-bold text-blue-900">ZMK {totalRepayment.toLocaleString()}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-gray-700">Weekly Payment:</span>
+                                  <span className="font-bold text-blue-900">ZMK {weeklyPayment.toFixed(2)}</span>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })()}
 
                         {/* Branch */}
                         <div className="mb-3">

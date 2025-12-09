@@ -698,20 +698,20 @@ const BorrowerDashboard = ({ useAuth }) => {
                   </div>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div className="bg-white rounded-lg p-3 border border-green-200">
-                      <p className="borrower-loan-label text-xs mb-1">Principal</p>
+                      <p className="borrower-loan-label text-xs mb-1">Principal Amount</p>
                       <p className="borrower-loan-text text-lg">ZMK {parseFloat(loan.principal_amount).toLocaleString()}</p>
                     </div>
-                    <div className="bg-white rounded-lg p-3 border border-green-200">
-                      <p className="borrower-loan-label text-xs mb-1">Outstanding</p>
-                      <p className="borrower-loan-text text-lg" style={{ color: '#c2410c !important' }}>ZMK {parseFloat(loan.outstanding_balance).toLocaleString()}</p>
+                    <div className="bg-white rounded-lg p-3 border border-orange-200">
+                      <p className="borrower-loan-label text-xs mb-1">Total Repayment</p>
+                      <p className="borrower-loan-text text-lg font-bold" style={{ color: '#c2410c' }}>ZMK {parseFloat(loan.outstanding_balance).toLocaleString()}</p>
                     </div>
-                    <div className="bg-white rounded-lg p-3 border border-green-200">
+                    <div className="bg-white rounded-lg p-3 border border-blue-200">
                       <p className="borrower-loan-label text-xs mb-1">Interest Rate</p>
-                      <p className="borrower-loan-text text-lg" style={{ color: '#1e40af !important' }}>{parseFloat(loan.interest_rate).toFixed(1)}%</p>
+                      <p className="borrower-loan-text text-lg font-bold" style={{ color: '#1e40af' }}>{loan.interest_rate ? parseFloat(loan.interest_rate).toFixed(1) : '0.0'}%</p>
                     </div>
-                    <div className="bg-white rounded-lg p-3 border border-green-200">
+                    <div className="bg-white rounded-lg p-3 border border-purple-200">
                       <p className="borrower-loan-label text-xs mb-1">Term</p>
-                      <p className="borrower-loan-text text-lg" style={{ color: '#7c3aed !important' }}>{loan.term_months} months</p>
+                      <p className="borrower-loan-text text-lg font-bold" style={{ color: '#7c3aed' }}>{loan.term_months} week{loan.term_months > 1 ? 's' : ''}</p>
                     </div>
                   </div>
                 </div>
