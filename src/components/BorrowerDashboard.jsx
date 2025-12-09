@@ -706,8 +706,12 @@ const BorrowerDashboard = ({ useAuth }) => {
                       <p className="borrower-loan-text text-lg font-bold" style={{ color: '#c2410c' }}>ZMK {parseFloat(loan.outstanding_balance).toLocaleString()}</p>
                     </div>
                     <div className="bg-white rounded-lg p-3 border border-blue-200">
-                      <p className="borrower-loan-label text-xs mb-1">Interest Rate</p>
-                      <p className="borrower-loan-text text-lg font-bold" style={{ color: '#1e40af' }}>{loan.interest_rate ? parseFloat(loan.interest_rate).toFixed(1) : '0.0'}%</p>
+                      <p className="borrower-loan-label text-xs mb-1">Weekly Interest Rate</p>
+                      <p className="borrower-loan-text text-lg font-bold" style={{ color: '#1e40af' }}>
+                        {loan.interest_rate && loan.term_months 
+                          ? (parseFloat(loan.interest_rate) / parseFloat(loan.term_months)).toFixed(2)
+                          : '0.0'}% /week
+                      </p>
                     </div>
                     <div className="bg-white rounded-lg p-3 border border-purple-200">
                       <p className="borrower-loan-label text-xs mb-1">Term</p>
