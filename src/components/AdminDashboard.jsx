@@ -85,6 +85,9 @@ const api = {
   deleteCollateral: (id) => api.request(`/admin/collateral/${id}`, {
     method: 'DELETE',
   }),
+  deleteLoan: (id) => api.request(`/admin/loans/${id}`, {
+    method: 'DELETE',
+  }),
 };
 
 // CollateralAssessment Component
@@ -697,33 +700,67 @@ const AdminDashboard = ({ useAuth }) => {
                             </span>
                           )}
                           
-                          <button
-                            disabled={actionState.id === app.id}
-                            onClick={async (e) => {
-                              e.preventDefault();
-                              console.log('🗑️ DELETE CLICKED for app:', app.id);
-                              try {
-                                setRowWorking(app.id, 'delete');
-                                console.log('🚀 Sending delete request...');
-                                await api.deleteApplication(app.id);
-                                console.log('✅ Delete successful');
-                                console.log('🔄 Reloading page...');
-                                setTimeout(() => {
-                                  alert('🗑️ Application deleted! Borrower: ' + (app.full_name || 'Unknown'));
-                                  window.location.reload();
-                                }, 100);
-                              } catch (err) {
-                                console.error('❌ Delete error:', err);
-                                alert('Error: ' + (err?.message || 'Failed to delete. Application may have an active loan.'));
-                              } finally {
-                                console.log('🏁 Clearing working state');
-                                clearRowWorking();
-                              }
-                            }}
-                            className="bg-gray-600 hover:bg-gray-700 text-black px-4 py-2 rounded text-sm font-medium disabled:opacity-50"
-                          >
-                            {actionState.id === app.id && actionState.type === 'delete' ? '⏳ Working...' : '🗑️ Remove'}
-                          </button>
+                          {/* Show delete button for applications or fully paid loans */}
+                          {isPaidLoan ? (
+                            <button
+                              disabled={actionState.id === app.id}
+                              onClick={async (e) => {
+                                e.preventDefault();
+                                console.log('🗑️ DELETE LOAN CLICKED for app:', app.id);
+                                if (!window.confirm('Are you sure you want to delete this fully paid loan? This action cannot be undone.')) {
+                                  return;
+                                }
+                                try {
+                                  setRowWorking(app.id, 'delete');
+                                  console.log('🚀 Sending delete loan request for loan ID:', associatedLoan.id);
+                                  await api.deleteLoan(associatedLoan.id);
+                                  console.log('✅ Loan delete successful');
+                                  console.log('🔄 Reloading page...');
+                                  setTimeout(() => {
+                                    alert('🗑️ Fully paid loan deleted! Borrower: ' + (app.full_name || 'Unknown'));
+                                    window.location.reload();
+                                  }, 100);
+                                } catch (err) {
+                                  console.error('❌ Delete loan error:', err);
+                                  alert('Error: ' + (err?.message || 'Failed to delete loan.'));
+                                } finally {
+                                  console.log('🏁 Clearing working state');
+                                  clearRowWorking();
+                                }
+                              }}
+                              className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded text-sm font-bold disabled:opacity-50"
+                            >
+                              {actionState.id === app.id && actionState.type === 'delete' ? '⏳ Working...' : '🗑️ Delete Loan'}
+                            </button>
+                          ) : (
+                            <button
+                              disabled={actionState.id === app.id}
+                              onClick={async (e) => {
+                                e.preventDefault();
+                                console.log('🗑️ DELETE CLICKED for app:', app.id);
+                                try {
+                                  setRowWorking(app.id, 'delete');
+                                  console.log('🚀 Sending delete request...');
+                                  await api.deleteApplication(app.id);
+                                  console.log('✅ Delete successful');
+                                  console.log('🔄 Reloading page...');
+                                  setTimeout(() => {
+                                    alert('🗑️ Application deleted! Borrower: ' + (app.full_name || 'Unknown'));
+                                    window.location.reload();
+                                  }, 100);
+                                } catch (err) {
+                                  console.error('❌ Delete error:', err);
+                                  alert('Error: ' + (err?.message || 'Failed to delete. Application may have an active loan.'));
+                                } finally {
+                                  console.log('🏁 Clearing working state');
+                                  clearRowWorking();
+                                }
+                              }}
+                              className="bg-gray-600 hover:bg-gray-700 text-black px-4 py-2 rounded text-sm font-medium disabled:opacity-50"
+                            >
+                              {actionState.id === app.id && actionState.type === 'delete' ? '⏳ Working...' : '🗑️ Remove'}
+                            </button>
+                          )}
                         </div>
                       </td>
                     </tr>
@@ -873,75 +910,98 @@ const AdminDashboard = ({ useAuth }) => {
                         )}
 
                         {/* Actions */}
-                        {!isPaidLoan && (
-                          <div className="flex gap-2 pt-3 border-t border-gray-200">
-                            {app.status === 'pending' && (
-                              <>
-                                <button
-                                  onClick={async () => {
-                                    if (!confirm(`Approve loan application for ${app.full_name}?`)) return;
-                                    setRowWorking(app.id, 'approve');
-                                    optimisticallySetStatus(app.id, 'approved');
-                                    try {
-                                      await api.reviewApplication(app.id, 'approved', 'Approved by admin');
-                                      await loadData();
-                                    } catch (err) {
-                                      alert(err.message);
-                                      await loadData();
-                                    } finally {
-                                      clearRowWorking();
-                                    }
-                                  }}
-                                  disabled={actionState.id === app.id && actionState.type === 'approve'}
-                                  className="flex-1 bg-gradient-to-r from-green-600 to-green-700 text-white px-3 py-2 rounded-lg hover:from-green-700 hover:to-green-800 transition font-bold shadow-md text-sm disabled:opacity-50"
-                                >
-                                  {actionState.id === app.id && actionState.type === 'approve' ? '⏳' : '✅'} Approve
-                                </button>
-                                <button
-                                  onClick={async () => {
-                                    const notes = prompt(`Rejection reason for ${app.full_name}:`, 'Insufficient collateral');
-                                    if (!notes) return;
-                                    setRowWorking(app.id, 'reject');
-                                    optimisticallySetStatus(app.id, 'rejected');
-                                    try {
-                                      await api.reviewApplication(app.id, 'rejected', notes);
-                                      await loadData();
-                                    } catch (err) {
-                                      alert(err.message);
-                                      await loadData();
-                                    } finally {
-                                      clearRowWorking();
-                                    }
-                                  }}
-                                  disabled={actionState.id === app.id && actionState.type === 'reject'}
-                                  className="flex-1 bg-gradient-to-r from-red-600 to-red-700 text-white px-3 py-2 rounded-lg hover:from-red-700 hover:to-red-800 transition font-bold shadow-md text-sm disabled:opacity-50"
-                                >
-                                  {actionState.id === app.id && actionState.type === 'reject' ? '⏳' : '❌'} Reject
-                                </button>
-                              </>
-                            )}
+                        <div className="flex gap-2 pt-3 border-t border-gray-200">
+                          {isPaidLoan ? (
                             <button
                               onClick={async () => {
-                                if (!confirm(`Delete application for ${app.full_name}? This cannot be undone.`)) return;
+                                if (!confirm(`Delete fully paid loan for ${app.full_name}? This cannot be undone.`)) return;
                                 setRowWorking(app.id, 'delete');
-                                optimisticallyRemove(app.id);
                                 try {
-                                  await api.deleteApplication(app.id);
+                                  await api.deleteLoan(associatedLoan.id);
+                                  alert('🗑️ Fully paid loan deleted!');
                                   await loadData();
                                 } catch (err) {
-                                  alert(err.message);
+                                  alert(err.message || 'Failed to delete loan');
                                   await loadData();
                                 } finally {
                                   clearRowWorking();
                                 }
                               }}
                               disabled={actionState.id === app.id && actionState.type === 'delete'}
-                              className="px-3 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition font-bold shadow-md text-sm disabled:opacity-50"
+                              className="flex-1 bg-gradient-to-r from-red-600 to-red-700 text-white px-3 py-2 rounded-lg hover:from-red-700 hover:to-red-800 transition font-bold shadow-md text-sm disabled:opacity-50"
                             >
-                              {actionState.id === app.id && actionState.type === 'delete' ? '⏳' : '🗑️'}
+                              {actionState.id === app.id && actionState.type === 'delete' ? '⏳ Deleting...' : '🗑️ Delete Loan'}
                             </button>
-                          </div>
-                        )}
+                          ) : (
+                            <>
+                              {app.status === 'pending' && (
+                                <>
+                                  <button
+                                    onClick={async () => {
+                                      if (!confirm(`Approve loan application for ${app.full_name}?`)) return;
+                                      setRowWorking(app.id, 'approve');
+                                      optimisticallySetStatus(app.id, 'approved');
+                                      try {
+                                        await api.reviewApplication(app.id, 'approved', 'Approved by admin');
+                                        await loadData();
+                                      } catch (err) {
+                                        alert(err.message);
+                                        await loadData();
+                                      } finally {
+                                        clearRowWorking();
+                                      }
+                                    }}
+                                    disabled={actionState.id === app.id && actionState.type === 'approve'}
+                                    className="flex-1 bg-gradient-to-r from-green-600 to-green-700 text-white px-3 py-2 rounded-lg hover:from-green-700 hover:to-green-800 transition font-bold shadow-md text-sm disabled:opacity-50"
+                                  >
+                                    {actionState.id === app.id && actionState.type === 'approve' ? '⏳' : '✅'} Approve
+                                  </button>
+                                  <button
+                                    onClick={async () => {
+                                      const notes = prompt(`Rejection reason for ${app.full_name}:`, 'Insufficient collateral');
+                                      if (!notes) return;
+                                      setRowWorking(app.id, 'reject');
+                                      optimisticallySetStatus(app.id, 'rejected');
+                                      try {
+                                        await api.reviewApplication(app.id, 'rejected', notes);
+                                        await loadData();
+                                      } catch (err) {
+                                        alert(err.message);
+                                        await loadData();
+                                      } finally {
+                                        clearRowWorking();
+                                      }
+                                    }}
+                                    disabled={actionState.id === app.id && actionState.type === 'reject'}
+                                    className="flex-1 bg-gradient-to-r from-red-600 to-red-700 text-white px-3 py-2 rounded-lg hover:from-red-700 hover:to-red-800 transition font-bold shadow-md text-sm disabled:opacity-50"
+                                  >
+                                    {actionState.id === app.id && actionState.type === 'reject' ? '⏳' : '❌'} Reject
+                                  </button>
+                                </>
+                              )}
+                              <button
+                                onClick={async () => {
+                                  if (!confirm(`Delete application for ${app.full_name}? This cannot be undone.`)) return;
+                                  setRowWorking(app.id, 'delete');
+                                  optimisticallyRemove(app.id);
+                                  try {
+                                    await api.deleteApplication(app.id);
+                                    await loadData();
+                                  } catch (err) {
+                                    alert(err.message);
+                                    await loadData();
+                                  } finally {
+                                    clearRowWorking();
+                                  }
+                                }}
+                                disabled={actionState.id === app.id && actionState.type === 'delete'}
+                                className="px-3 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition font-bold shadow-md text-sm disabled:opacity-50"
+                              >
+                                {actionState.id === app.id && actionState.type === 'delete' ? '⏳' : '🗑️'}
+                              </button>
+                            </>
+                          )}
+                        </div>
                       </div>
                     );
                   })}

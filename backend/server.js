@@ -886,6 +886,90 @@ app.put('/api/admin/applications/:id/review', authenticateToken, authorize('admi
   }
 });
 
+// Delete a loan (only if fully paid)
+app.delete('/api/admin/loans/:id', authenticateToken, authorize('admin'), async (req, res) => {
+  console.log('🗑️ DEBUG - Delete loan request received:', {
+    loanId: req.params.id,
+    userId: req.user?.id,
+    userRole: req.user?.role
+  });
+  
+  const connection = await pool.getConnection();
+  
+  try {
+    await connection.beginTransaction();
+    
+    const { id } = req.params;
+    
+    // Get loan details
+    const [loans] = await connection.execute(
+      'SELECT * FROM loans WHERE id = ?',
+      [id]
+    );
+    
+    if (loans.length === 0) {
+      await connection.rollback();
+      return res.status(404).json({ error: 'Loan not found' });
+    }
+    
+    const loan = loans[0];
+    
+    // Only allow deletion if loan is fully paid (closed with 0 balance)
+    if (loan.status !== 'closed' || parseFloat(loan.outstanding_balance) > 0) {
+      await connection.rollback();
+      return res.status(400).json({ 
+        error: 'Can only delete fully paid loans. This loan still has an outstanding balance or is not closed.' 
+      });
+    }
+    
+    console.log('✅ Loan is fully paid - allowing deletion');
+    
+    // Delete payments first (to maintain referential integrity)
+    await connection.execute(
+      'DELETE FROM payments WHERE loan_id = ?',
+      [id]
+    );
+    
+    // Delete repayment schedules
+    await connection.execute(
+      'DELETE FROM repayment_schedules WHERE loan_id = ?',
+      [id]
+    );
+    
+    // Delete the loan
+    await connection.execute(
+      'DELETE FROM loans WHERE id = ?',
+      [id]
+    );
+    
+    // Log the deletion
+    await auditLog(
+      req.user.id, 
+      'loan_deleted', 
+      'loan', 
+      id, 
+      loan, 
+      {}
+    );
+    
+    await connection.commit();
+    res.json({ 
+      message: 'Loan deleted successfully',
+      deletedLoan: {
+        id: loan.id,
+        principal: loan.principal_amount
+      }
+    });
+    
+  } catch (err) {
+    await connection.rollback();
+    console.error('Delete loan error:', err);
+    res.status(500).json({ error: 'Server error while deleting loan' });
+  } finally {
+    connection.release();
+  }
+});
+
 // Delete loan application
 app.delete('/api/admin/applications/:id', authenticateToken, authorize('admin'), async (req, res) => {
   console.log('🗑️ DEBUG - Delete request received:', {
