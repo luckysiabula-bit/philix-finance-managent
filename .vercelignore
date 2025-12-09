@@ -1,0 +1,22 @@
+# Ignore git files
+.git
+.gitignore
+
+# Ignore local development files
+node_modules
+.env
+.env.local
+.env.*.local
+
+# Ignore documentation
+*.md
+!README.md
+
+# Ignore build files
+dist
+build
+.cache
+
+# Ignore test files
+test_*
+tmp_*

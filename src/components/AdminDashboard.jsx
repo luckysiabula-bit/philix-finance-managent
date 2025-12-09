@@ -195,7 +195,8 @@ const AdminDashboard = ({ useAuth }) => {
     email: '',
     password: '',
     full_name: '',
-    phone_number: ''
+    phone_number: '',
+    secret_key: ''
   });
   const [branchFilter, setBranchFilter] = useState(''); // Branch filtering state
   const [loanStatusFilter, setLoanStatusFilter] = useState('all'); // 'all', 'active', 'closed'
@@ -1140,7 +1141,7 @@ const AdminDashboard = ({ useAuth }) => {
                 await api.createAdmin(adminForm);
                 alert('Admin created successfully!');
                 setShowCreateAdmin(false);
-                setAdminForm({ email: '', password: '', full_name: '', phone_number: '' });
+                setAdminForm({ email: '', password: '', full_name: '', phone_number: '', secret_key: '' });
               } catch (err) {
                 alert('Error: ' + err.message);
               }
@@ -1182,6 +1183,17 @@ const AdminDashboard = ({ useAuth }) => {
                     required
                     value={adminForm.password}
                     onChange={(e) => setAdminForm(prev => ({ ...prev, password: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">🔑 Secret Key</label>
+                  <input
+                    type="password"
+                    required
+                    value={adminForm.secret_key}
+                    onChange={(e) => setAdminForm(prev => ({ ...prev, secret_key: e.target.value }))}
+                    placeholder="Enter admin secret key"
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   />
                 </div>
