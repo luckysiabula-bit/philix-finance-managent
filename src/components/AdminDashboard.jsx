@@ -728,7 +728,7 @@ const AdminDashboard = ({ useAuth }) => {
                                   clearRowWorking();
                                 }
                               }}
-                              className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded text-sm font-bold disabled:opacity-50"
+                              className="bg-red-600 hover:bg-red-700 text-black px-4 py-2 rounded text-sm font-bold disabled:opacity-50"
                             >
                               {actionState.id === app.id && actionState.type === 'delete' ? '⏳ Working...' : '🗑️ Delete Loan'}
                             </button>
@@ -928,7 +928,7 @@ const AdminDashboard = ({ useAuth }) => {
                                 }
                               }}
                               disabled={actionState.id === app.id && actionState.type === 'delete'}
-                              className="flex-1 bg-gradient-to-r from-red-600 to-red-700 text-white px-3 py-2 rounded-lg hover:from-red-700 hover:to-red-800 transition font-bold shadow-md text-sm disabled:opacity-50"
+                              className="flex-1 bg-gradient-to-r from-red-600 to-red-700 text-black px-3 py-2 rounded-lg hover:from-red-700 hover:to-red-800 transition font-bold shadow-md text-sm disabled:opacity-50"
                             >
                               {actionState.id === app.id && actionState.type === 'delete' ? '⏳ Deleting...' : '🗑️ Delete Loan'}
                             </button>
