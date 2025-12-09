@@ -1102,16 +1102,24 @@ const BorrowerDashboard = ({ useAuth }) => {
                   '4': 1
                 };
                 
+                // Calculate the interest rate based on the term
+                const { weekly, total, interest, rate } = calculateWeeklyLoan(
+                  loanForm.requested_amount,
+                  loanForm.term_months
+                );
+                
                 const payload = {
                   loan_product_id: 1, // Default product ID
                   requested_amount: parseFloat(loanForm.requested_amount),
                   term_months: loanForm.term_months, // Keep as weeks value
                   purpose: loanForm.purpose,
                   branch: loanForm.branch || null, // Include branch selection
+                  interest_rate: rate, // Add calculated interest rate
                 };
                 
                 // Add debugging logs
                 console.log('🔍 DEBUG - Current loanForm state:', loanForm);
+                console.log('📊 DEBUG - Calculated interest rate:', rate + '%');
                 console.log('📤 DEBUG - Sending loan application payload:', payload);
                 console.log('🎓 DEBUG - Branch value being sent:', payload.branch);
                 
