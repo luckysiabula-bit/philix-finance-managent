@@ -227,10 +227,26 @@ app.post('/api/auth/register', async (req, res) => {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
-    // Check if user exists
+    // Check if email already exists
     const [existing] = await pool.execute('SELECT id FROM users WHERE email = ?', [email]);
     if (existing.length > 0) {
       return res.status(400).json({ error: 'Email already registered' });
+    }
+
+    // Check if phone number already exists (if provided)
+    if (phone_number) {
+      const [existingPhone] = await pool.execute('SELECT id FROM users WHERE phone_number = ?', [phone_number]);
+      if (existingPhone.length > 0) {
+        return res.status(400).json({ error: 'Phone number already registered' });
+      }
+    }
+
+    // Check if ID number already exists (if provided)
+    if (id_number) {
+      const [existingId] = await pool.execute('SELECT id FROM borrowers WHERE id_number = ?', [id_number]);
+      if (existingId.length > 0) {
+        return res.status(400).json({ error: 'ID number already registered' });
+      }
     }
 
     // Hash password
